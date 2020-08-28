@@ -1,7 +1,7 @@
 export default {
   mode: "spa",
   css: ["~/assets/css/main.css"],
-  buildModules: ["@nuxtjs/tailwindcss"],
+  buildModules: ["@nuxtjs/tailwindcss", "@nuxt/content"],
   head: {
     meta: [
       { charset: "utf-8" },

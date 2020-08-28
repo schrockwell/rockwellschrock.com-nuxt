@@ -2,6 +2,7 @@ const defaultTheme = require("tailwindcss/defaultTheme");
 const defaultConfigStub = require("tailwindcss/stubs/defaultConfig.stub");
 
 module.exports = {
+  plugins: [require("@tailwindcss/typography")],
   theme: {
     fontFamily: {
       ...defaultTheme.fontFamily,

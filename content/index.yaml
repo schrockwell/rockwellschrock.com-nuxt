@@ -1,0 +1,41 @@
+title: Rockwell Schrock
+
+tagline: Full-stack web and iOS developer. Podcaster. Maker of things.
+
+socials:
+  - title: Twitter
+    href: https://twitter.com/schrockwel
+  - title: YouTube
+    href: https://youtube.com/schrockwell
+  - title: GitHub
+    href: https://github.com/schrockwell
+
+sections:
+  - title: Current Projects
+    projects:
+      - title: Remote Ham Radio
+        subtitle: Get on the air from anywhere
+        href: https://www.remotehamradio.com/
+
+      - title: SOTA Goat for iOS
+        subtitle: Utility for portable radio operators
+        href: https://www.ww1x.com/sotagoat/
+        
+      - title: WaveGuide for iOS
+        subtitle: Radio propagation utility
+        href: https://www.ww1x.com/waveguide/
+
+      - title: Does Not Compute
+        subtitle: Weekly development podcast
+        href: https://dnc.show/
+
+  - title: Recent Projects
+    projects: 
+      - title: METAR Map
+        subtitle: Weather at a glance
+        to: projects/metar-map
+
+  - title: Experience
+    projects:
+      - title: Curriculum Vitae
+        to: cv

@@ -1,0 +1,49 @@
+categories:
+  - title: Web Front-End
+    items:
+    - Vue.js / Nuxt.js
+    - Phoenix LiveView
+    - Tailwind CSS
+    - Bootstrap
+    - Electron
+    - React
+
+  - title: Web Back-End
+    items:
+    - Ruby on Rails
+    - Phoenix / Elixir
+    - PostgreSQL
+    - Redis
+    - REST
+    - GraphQL
+
+  - title: DevOps
+    items:
+    - AWS
+    - Azure
+    - Packer
+    - Ubuntu
+    - Nginx
+    - Shell Scripting
+
+  - title: JavaScript
+    items:
+    - Node.js / ES6
+    - WebRTC
+    - WebSockets
+    - WebAudio
+    - Canvas
+
+  - title: Windows
+    items:
+    - C# / VB.NET / .NET
+    - MS SQL Server
+    - Windows Forms
+    - ASP.NET
+    - IIS
+    
+  - title: iOS
+    items:
+    - Objective-C
+    - Swift
+  

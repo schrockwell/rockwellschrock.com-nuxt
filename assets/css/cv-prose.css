@@ -1,0 +1,15 @@
+.cv-prose p {
+  @apply mb-4 leading-relaxed;
+}
+
+.cv-prose h4 {
+  @apply font-medium font-display text-lg text-gray-600 mt-6;
+}
+
+.cv-prose a {
+  @apply text-orange-500 transition duration-300;
+
+  &:hover {
+    @apply text-orange-700;
+  }
+}

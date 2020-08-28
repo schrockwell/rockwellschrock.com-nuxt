@@ -7,7 +7,9 @@
     "start": "nuxt start"
   },
   "dependencies": {
+    "@nuxt/content": "^1.7.0",
     "@nuxtjs/tailwindcss": "^3.0.2",
+    "@tailwindcss/typography": "^0.2.0",
     "nuxt": "^2.14.3",
     "tailwindcss": "^1.7.5"
   },
