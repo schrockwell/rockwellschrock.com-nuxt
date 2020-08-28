@@ -9,4 +9,5 @@ export default {
     ],
   },
   components: true,
+  target: "static",
 };
