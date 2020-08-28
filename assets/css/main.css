@@ -1,0 +1,49 @@
+@import "./fonts.css";
+
+@tailwind base;
+
+@tailwind components;
+
+.list-tech {
+  @apply text-sm uppercase font-semibold text-gray-500 flex;
+}
+
+.mb-para {
+  @apply mb-2;
+}
+
+@tailwind utilities;
+
+.text-h3 {
+  @apply font-medium font-display text-xl text-gray-700;
+}
+
+.text-h4 {
+  @apply font-medium font-display text-lg text-gray-600;
+}
+
+.text-link {
+  @apply text-orange-500 transition duration-300;
+
+  &:hover {
+    @apply text-orange-700;
+  }
+}
+
+.dots-between * {
+  @apply ml-1;
+}
+
+.dots-between *:first-child {
+  @apply ml-0;
+}
+
+.dots-between *:before {
+  content: "•";
+  @apply mr-1;
+}
+
+.dots-between *:first-child:before {
+  content: "";
+  @apply mr-0;
+}
