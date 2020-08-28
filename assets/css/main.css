@@ -5,7 +5,7 @@
 @tailwind components;
 
 .list-tech {
-  @apply text-sm uppercase font-semibold text-gray-500 flex;
+  @apply text-sm uppercase font-semibold text-gray-500 flex flex-wrap;
 }
 
 .mb-para {

@@ -3,8 +3,8 @@
     <Hero>Curriculum Vitae</Hero>
 
     <CvSection title="Skills">
-      <div class="sm:flex flex-wrap">
-        <CvEntry title="Web Front-End" class="sm:w-1/2 md:w-1/3 mb-8">
+      <div class="flex flex-wrap">
+        <CvEntry title="Web Front-End" class="w-1/2 md:w-1/3 mb-8">
           <ul>
             <li>Vue.js / Nuxt.js</li>
             <li>Phoenix LiveView</li>
@@ -14,7 +14,7 @@
             <li>React</li>
           </ul>
         </CvEntry>
-        <CvEntry title="Web Back-End" class="sm:w-1/2 md:w-1/3 mb-8">
+        <CvEntry title="Web Back-End" class="w-1/2 md:w-1/3 mb-8">
           <ul>
             <li>Ruby on Rails</li>
             <li>Phoenix / Elixir</li>
@@ -24,7 +24,7 @@
             <li>GraphQL</li>
           </ul>
         </CvEntry>
-        <CvEntry title="DevOps" class="sm:w-1/2 md:w-1/3 mb-8">
+        <CvEntry title="DevOps" class="w-1/2 md:w-1/3 mb-8">
           <ul>
             <li>AWS</li>
             <li>Azure</li>
@@ -34,7 +34,7 @@
             <li>Shell Scripting</li>
           </ul>
         </CvEntry>
-        <CvEntry title="JavaScript" class="sm:w-1/2 md:w-1/3 mb-8">
+        <CvEntry title="JavaScript" class="w-1/2 md:w-1/3 mb-8">
           <ul>
             <li>Node.js / ES6</li>
             <li>WebRTC</li>
@@ -43,7 +43,7 @@
             <li>Canvas</li>
           </ul>
         </CvEntry>
-        <CvEntry title="Windows" class="sm:w-1/2 md:w-1/3 mb-8">
+        <CvEntry title="Windows" class="w-1/2 md:w-1/3 mb-8">
           <ul>
             <li>C# / VB.NET / .NET</li>
             <li>MS SQL Server</li>
@@ -52,7 +52,7 @@
             <li>IIS</li>
           </ul>
         </CvEntry>
-        <CvEntry title="iOS" class="sm:w-1/2 md:w-1/3 mb-8">
+        <CvEntry title="iOS" class="w-1/2 md:w-1/3 mb-8">
           <ul>
             <li>Objective-C</li>
             <li>Swift</li>
@@ -62,7 +62,7 @@
     </CvSection>
 
     <CvSection title="Active Work">
-      <div class="space-y-8 md:space-y-16">
+      <div class="space-y-12 md:space-y-16">
         <CvEntry
           title="CTO and Lead Developer"
           subtitle="Remote Ham Radio"
@@ -154,11 +154,7 @@
           </ul>
         </CvEntry>
 
-        <CvEntry
-          title="DevOps Consultant"
-          subtitle="Glance Networks"
-          :date="toThisYear('2019')"
-        >
+        <CvEntry title="DevOps Consultant" subtitle="Glance Networks" :date="toThisYear('2019')">
           <p class="mb-para">
             Assisted the Glance DevOps team with the automation of building,
             deploying, and scaling of Glance server instances on AWS and Azure.
@@ -176,27 +172,20 @@
           </ul>
         </CvEntry>
 
-        <CvEntry
-          title="Podcast Co-Host"
-          subtitle="Does Not Compute"
-          :date="toThisYear('2018')"
-        >
+        <CvEntry title="Podcast Co-Host" subtitle="Does Not Compute" :date="toThisYear('2018')">
           <p class="mb-para">
             Recorded over 100 episodes discussing various topics around software
             development, including news, conferences, languages, tools,
             learning, and the occasional off-topic tangent.
           </p>
           <a class="text-link" href="https://dnc.show/">All episodes</a> &ndash;
-          <a class="text-link" href="https://twitch.tv/dnccast"
-            >Live streaming and recordings</a
-          >
+          <a
+            class="text-link"
+            href="https://twitch.tv/dnccast"
+          >Live streaming and recordings</a>
         </CvEntry>
 
-        <CvEntry
-          title="iOS Developer"
-          subtitle="Self-Employed"
-          :date="toThisYear('2012')"
-        >
+        <CvEntry title="iOS Developer" subtitle="Self-Employed" :date="toThisYear('2012')">
           <p class="mb-para">
             Independently developed and supported utility applications for
             amateur radio operators.
@@ -204,14 +193,10 @@
 
           <ul>
             <li class="mb-para">
-              <a class="text-link" href="https://www.ww1x.com/waveguide/"
-                >WaveGuide</a
-              >
+              <a class="text-link" href="https://www.ww1x.com/waveguide/">WaveGuide</a>
             </li>
             <li class="mb-para">
-              <a class="text-link" href="https://www.ww1x.com/sotagoat/"
-                >SOTA Goat</a
-              >
+              <a class="text-link" href="https://www.ww1x.com/sotagoat/">SOTA Goat</a>
             </li>
           </ul>
 
@@ -222,11 +207,7 @@
           </ul>
         </CvEntry>
 
-        <CvEntry
-          title="Web App Consultant"
-          subtitle="Self-Employed"
-          :date="toThisYear('2012')"
-        >
+        <CvEntry title="Web App Consultant" subtitle="Self-Employed" :date="toThisYear('2012')">
           <p class="mb-para">
             Developed and supported various applications for businesses,
             municipalities, and individuals.
@@ -249,27 +230,19 @@
     </CvSection>
 
     <CvSection title="Past Work">
-      <div class="space-y-8 md:space-y-16">
-        <CvEntry
-          title="Firmware Developer"
-          subtitle="Keysight Technologies"
-          date="2013 – 2014"
-        >
-          <p class="mb-para">
-            Developed software for electronic test equipment running on Windows.
-          </p>
+      <div class="space-y-12 md:space-y-16">
+        <CvEntry title="Firmware Developer" subtitle="Keysight Technologies" date="2013 – 2014">
+          <p class="mb-para">Developed software for electronic test equipment running on Windows.</p>
           <p class="mb-para">
             On the Physics team for
             <a
               class="text-link"
               href="https://www.keysight.com/en/pcx-x205200/x-series-signal-analyzers?&cc=US&lc=eng"
-              >X-Series signal analyzers</a
-            >, implemented feature requests and bug fixes, interfaced with
+            >X-Series signal analyzers</a>, implemented feature requests and bug fixes, interfaced with
             <a
               class="text-link"
               href="https://www.keysight.com/en/pc-2033178/smart-harmonic-mixers?cc=US&lc=eng"
-              >USB peripherals</a
-            >
+            >USB peripherals</a>
             , and developed all-new hardware-acclerated measurements in FPGAs.
           </p>
           <p class="mb-para">
@@ -286,19 +259,14 @@
           </ul>
         </CvEntry>
 
-        <CvEntry
-          title="Educational Content Creator"
-          subtitle="NOAA"
-          date="2009"
-        >
+        <CvEntry title="Educational Content Creator" subtitle="NOAA" date="2009">
           <p class="mb-para">
             Created
-            <a class="text-link italic" href="https://vimeo.com/5911007"
-              >Cooking Up a Storm</a
-            >, an 8-minute educational video for NOAA's
-            <a class="text-link" href="https://sos.noaa.gov/What_is_SOS/"
-              >Science On a Sphere</a
-            >
+            <a class="text-link italic" href="https://vimeo.com/5911007">Cooking Up a Storm</a>, an 8-minute educational video for NOAA's
+            <a
+              class="text-link"
+              href="https://sos.noaa.gov/What_is_SOS/"
+            >Science On a Sphere</a>
             program, as part of NOAA's Hollings undergraduate summer internship.
           </p>
           <ul class="list-tech dots-between">
@@ -306,11 +274,7 @@
           </ul>
         </CvEntry>
 
-        <CvEntry
-          title="Web Developer"
-          subtitle="C4.net Internet Services"
-          date="2004 – 2006"
-        >
+        <CvEntry title="Web Developer" subtitle="C4.net Internet Services" date="2004 – 2006">
           <p class="mb-para">
             Developed web applications for local businesses and for internal use
             as a summer job.
@@ -325,13 +289,12 @@
     </CvSection>
 
     <CvSection title="Appearances">
-      <div class="space-y-8 md:space-y-16">
+      <div class="space-y-12 md:space-y-16">
         <CvEntry title="Lightning Talk" subtitle="ElixirConf" date="2017">
           <a
             class="text-link italic"
             href="https://www.youtube.com/watch?v=Ty6rkz7eg6Y"
-            >Elixir Tips: A Year of Tiny Explosions</a
-          >
+          >Elixir Tips: A Year of Tiny Explosions</a>
         </CvEntry>
 
         <CvEntry
@@ -339,12 +302,10 @@
           subtitle="IEEE International Geoscience and Remote Sensing Symposium (IGARSS)"
           date="2012"
         >
-          <a
-            class="text-link italic"
-            href="https://ieeexplore.ieee.org/document/6350711"
-            >An airborne 35 GHz radar interferometer in development at the
-            university of Massachusetts</a
-          >
+          <a class="text-link italic" href="https://ieeexplore.ieee.org/document/6350711">
+            An airborne 35 GHz radar interferometer in development at the
+            university of Massachusetts
+          </a>
         </CvEntry>
 
         <CvEntry title="Book Interview" subtitle="Make:" date="2005">
@@ -352,15 +313,16 @@
           <a
             class="text-link italic"
             href="https://www.amazon.com/Makers-Amazing-Garages-Basements-Backyards/dp/0596101880"
-            >Makers: All Kinds of People Making Amazing Things In Garages,
-            Basements, and Backyards</a
-          >, by Bob Parks.
+          >
+            Makers: All Kinds of People Making Amazing Things In Garages,
+            Basements, and Backyards
+          </a>, by Bob Parks.
         </CvEntry>
       </div>
     </CvSection>
 
     <CvSection title="Education">
-      <div class="space-y-8 md:space-y-16">
+      <div class="space-y-12 md:space-y-16">
         <CvEntry
           title="M.S. Electrical and Computer Engineering"
           subtitle="University of Massachusetts, Amherst, MA"
@@ -369,9 +331,10 @@
           <a
             class="text-link italic block mb-para"
             href="https://scholarworks.umass.edu/theses/1011/"
-            >Integration And Measurements of a Ka-Band Interferometric Radar in
-            an Airborne Platform</a
           >
+            Integration And Measurements of a Ka-Band Interferometric Radar in
+            an Airborne Platform
+          </a>
           <ul class="list-tech dots-between">
             <li>MATLAB</li>
             <li>LabView</li>
@@ -395,9 +358,7 @@
       <p class="mb-4">Private Pilot Certificate, Piper Archer II Co-Owner</p>
 
       <h3 class="text-h3">Amateur Radio</h3>
-      <p class="mb-4">
-        Amateur Extra License, SOTA, Satellites, DXing, Remoting
-      </p>
+      <p class="mb-4">Amateur Extra License, SOTA, Satellites, DXing, Remoting</p>
 
       <h3 class="text-h3">Woodworking</h3>
     </CvSection>
@@ -408,15 +369,15 @@
 export default {
   head() {
     return {
-      title: "Rockwell Schrock // CV"
+      title: "Rockwell Schrock // CV",
     };
   },
 
   methods: {
     toThisYear(year) {
       return `${year} – Present`;
-    }
-  }
+    },
+  },
 };
 </script>
 

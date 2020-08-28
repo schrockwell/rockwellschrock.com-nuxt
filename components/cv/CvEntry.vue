@@ -1,5 +1,5 @@
 <template>
-  <div class="md:border-t-4 border-gray-400 pt-2">
+  <div class="border-t-4 border-gray-400 pt-2">
     <div class="flex w-100 md:mb-2 mb-1 items-center">
       <div class="flex-grow">
         <h4 v-if="subtitle" class="text-gray-500 font-medium">{{ subtitle }}</h4>
