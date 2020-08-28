@@ -12,9 +12,8 @@
       </span>
       <div class="mt-2 md:mt-0">
         <ul class="flex space-x-4">
-          <li>
+          <li v-if="false">
             <nuxt-link
-              v-if="false"
               to="/projects"
               class="text-gray-600 hover:text-orange-500 transition duration-300"
               >Projects</nuxt-link
