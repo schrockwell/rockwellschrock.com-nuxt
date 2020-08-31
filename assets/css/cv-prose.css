@@ -13,3 +13,7 @@
     @apply text-orange-700;
   }
 }
+
+.cv-prose strong {
+  @apply font-semibold;
+}
