@@ -16,7 +16,7 @@ Then browse at https://localhost:3000/
 ### Production
 
 ```bash
-npm generate
+npm run generate
 ```
 
 The static site output is in `dist/`.
