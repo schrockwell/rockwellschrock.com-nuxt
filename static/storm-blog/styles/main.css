@@ -1,0 +1,155 @@
+body {
+	color: #333333;
+	margin: 0;
+	background-color: #EEEEEE;
+	font-family: "Helvetica Neue", Arial, sans-serif;
+}
+
+.quiet {
+	color: #999999;
+}
+
+div#hd {
+	height: 166px;
+	background-image: url('/storm-blog/images/banner4.jpg');
+}
+
+div#hd h1 {
+	display: none;
+	visibility: hidden;
+}
+
+div#map {
+	height: 300px;
+}
+
+div#bd {
+	background-color: #FFFFFF;
+	padding-top: 2em;
+	padding-bottom: 2em;
+}
+
+div#nv {
+	background-color: #486e26;
+}
+
+div#notice {
+	font-size: 1.25em;
+	border-top: 15px solid #fff;
+	background-color: #D13400;
+	color: #fff;
+}
+
+div#notice a {
+	color: #fff;
+}
+
+div#notice p {
+	padding: 0.5em 20px;
+	margin: 0;
+}
+
+div#nv ul {
+	list-style: none;
+	margin: 0;
+}
+
+div#nv ul li {
+	display: block;
+	float: left;
+}
+
+div#nv ul li a {
+	display: block;
+	margin: 0;
+	padding: 5px 20px;
+	color: #b3e08b;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	font-size: 0.9em;
+	text-decoration: none;
+}
+
+div#nv ul li a:hover {
+	background-color: #609333;
+	color: #FFFFFF;
+}
+
+a {
+	color: #609232;
+	text-decoration: underline;
+}
+
+a:hover, a:focus {
+	color: #000000;
+}
+
+a.invisible {
+	color: inherit;
+	text-decoration: inherit;
+}
+
+a.invisible:hover, a.invisible:focus {
+	text-decoration: underline;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-weight: bold;
+	line-height: 1.25em;
+}
+
+div.yearCallout {
+	border: 1px solid #eea; 
+	padding: 1.5em 2em 0 2em; 
+	margin-bottom: 2em; 
+	background-color:#ffd;
+}
+
+div.yearCallout h1 {
+	font-size: 1.5em;
+}
+
+div#twitter_div ul {
+	list-style: none;
+	margin: 0;
+}
+
+div#twitter_div ul li {
+	border-bottom: 1px solid #DDDDDD;
+	padding-bottom: 1.5em;
+	margin-top: 1.5em;
+}
+
+a#twitter-link {
+	margin-top: 1.5em;
+}
+
+div.indexPost {
+	margin-bottom: 3em;
+	padding-bottom: 3em;
+	border-bottom: 1px solid #CCCCCC;
+}
+
+div#ft {
+	margin-top: 1.5em;
+	margin-bottom: 1.5em;
+}
+
+div#ft, div#ft a {
+	color: #999999;
+}
+
+div#ft a:hover {
+	color: #000000;
+}
+
+blockquote.big {
+	font-family: Georgia, "Times New Roman";
+	font-size: 1.5em;
+	color: #999999;
+}
+
+p img {
+	float: none;
+	margin: 0;
+}

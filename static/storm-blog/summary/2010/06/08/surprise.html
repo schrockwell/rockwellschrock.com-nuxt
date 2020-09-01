@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>The Suck Zone  &ndash; Surprise! </title>
+	
+	<link rel="alternate" title="" type="application/atom+xml" href="/storm-blog/atom.xml">
+	
+	<link rel="stylesheet" href="/storm-blog/styles/blueprint/screen.css" type="text/css" media="screen, projection">
+	<link rel="stylesheet" href="/storm-blog/styles/blueprint/print.css" type="text/css" media="print">	
+	<!--[if IE]><link rel="stylesheet" href="/storm-blog/styles/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
+	
+	<link rel="stylesheet" href="/storm-blog/styles/main.css" type="text/css">
+	
+	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.0/jquery.min.js"></script>
+	
+	<script type="text/javascript">
+		var radarOverlay, map, mapDiv, marker;
+		
+		var refreshMarker = function() {
+			mapDiv = document.getElementById("map");
+			if (mapDiv == null) {
+				return;
+			}
+
+			$.get("/storm-blog/spotter_feed.cfm", function(data) {
+				var objects = data.split("End:");
+				var found = false;
+
+				for (var i = 0; i < objects.length; i++) {
+					var object = objects[i];
+					if (object.indexOf("Rockwell Schrock") > -1) {
+						var lines = object.split("\n");
+						var coords = lines[1].split(" ")[1].split(",");
+						var utcTime = lines[2].split("\\n")[1];
+						var date = new Date(Date.parse(utcTime));
+						
+						var now = new Date();
+						var minutesAgo = Math.round((now.getTime() - date.getTime()) / 60000);
+
+						var latlng = new google.maps.LatLng(coords[0], coords[1]);
+
+						if (map == null) {
+							map = new google.maps.Map(mapDiv, {
+								zoom: 8,
+								mapTypeId: google.maps.MapTypeId.ROADMAP
+							});
+
+							marker = new google.maps.Marker({
+								map: map
+							});
+						}
+
+						map.setCenter(latlng);
+						marker.setPosition(latlng);
+						
+						$("#map_date").text(minutesAgo + " " + (minutesAgo == 1 ? "minute" : "minutes") + " ago (" + utcTime + ")");
+						
+						found = true;
+						break;
+					}
+				}
+				
+				if (found) {
+					refreshRadarOverlay();
+					$("#map, #map_info").show();
+				} else {
+					$("#map, #map_info").hide();
+				}
+
+			});
+		};
+
+		var refreshRadarOverlay = function() {
+			var imageBounds = new google.maps.LatLngBounds(
+			    new google.maps.LatLng(21.652538062803, -127.620375523875420),
+			    new google.maps.LatLng(50.406626367301044,-66.517937876818));
+			
+			var oldMap = map;
+
+			if (radarOverlay != null) {
+				oldMap = radarOverlay.getMap();
+				radarOverlay.setMap(null)
+			};
+
+			radarOverlay = new google.maps.GroundOverlay("http://radar.weather.gov/ridge/Conus/RadarImg/latest_radaronly.gif", imageBounds, { opacity: 0.5, map: oldMap });
+		};
+
+
+		setInterval(refreshMarker, 1 * 60 * 1000);
+
+		$(function() {
+			refreshMarker();
+
+			$("#radar_check").click(function() {
+				var check = $("#radar_check");
+				if (check.prop("checked")) {
+					radarOverlay.setMap(map);
+				} else {
+					radarOverlay.setMap(null);
+				}
+			});
+		});
+	
+	</script>
+	
+</head>
+<body>
+
+	<div class="container" id="hd">
+		
+	</div>
+	
+	<div class="container" id="nv">
+		
+		<ul>
+			<li><a href="/storm-blog/">Latest</a></li>
+			<li><a href="/storm-blog/2015.html">2015</a></li>
+			<li><a href="/storm-blog/2011.html">2011</a></li>
+			<li><a href="/storm-blog/2010.html">2010</a></li>
+			<li><a href="/storm-blog/2009.html">2009</a></li>
+			<li><a href="/storm-blog/2007.html">2007</a></li>
+			<li><a href="/storm-blog/2006.html">2006</a></li>			
+			<li><a href="/storm-blog/archive.html">Archive</a></li>
+			<!--<li><a href="/storm-blog/map.html">Live Map</a></li>-->
+			<li><a href="http://twitter.com/suckzone">Twitter</a></li>
+			<li><a href="/storm-blog/atom.xml">RSS</a></li>
+			<li><a href="/storm-blog/about.html">About</a></li>
+		</ul>
+		
+	</div>
+
+	<div class="container" id="notice">
+		<p>
+			<b>LIVE STREAMING</b> &ndash;
+			Download <a href="https://itunes.apple.com/app/id972909677">Periscope</a> and follow <a href="http://twitter.com/suckzone">@suckzone</a> to be notified when streams begin.
+		</p>
+	</div>
+	
+	<div class="container" id="map_info" style="display: none">
+		<div style="padding: 5px 20px; background-color: #333; color: #fff">
+			<div style="float: right">
+				Position updates every minute &ndash; 
+				<input type="checkbox" id="radar_check" checked="checked"><label for="radar_check" style="font-weight: normal">Radar overlay</label>
+			</div>
+			<b>LATEST POSITION</b> &ndash;
+			<span id="map_date"></span>
+		</div>
+	</div>
+
+	<div class="container" id="map" style="display: none">
+	
+	</div>
+	
+	
+	<div class="container" id="bd">
+		<div class="prepend-2 span-13 append-1">
+			
+			<h2>
+	<a class="invisible" href="">
+		June 08, 2010 &ndash; 
+		Surprise!
+	</a>
+</h2>
+
+
+
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/PzUBaiz469EtCR2rtwlNAA?feat=directlink"><img src="http://lh5.ggpht.com/_8Y30e9LNsno/TA8zQ7JOc2I/AAAAAAAACoU/50zsFnSydKk/s400/DSC_5566.JPG" alt="" /></a></p>
+<ul>
+	<li><strong><a href="http://picasaweb.google.com/lh/photo/--4CoryHCsVAsHkKvU4M1g?feat=directlink">Route map</a></strong></li>
+	<li><strong><a href="http://picasaweb.google.com/schrockwell/June82010?feat=directlink">Photo gallery</a></strong></li>
+	<li><strong>Trip meter:</strong> about 440 miles</li>
+	<li><strong>Time:</strong> 12 hours</li>
+	<li><strong>From:</strong> Ogallala, NE to Limon, CO</li>
+	<li><strong>Summary:</strong> A near-bust ends with a tornado-warned supercell at dusk in eastern CO</li>
+	<li><strong>Interesting town names:</strong> Last Chance, Punkin Center</li>
+</ul>
+<p>Whee! Today was a long day that ended with a nice treat.</p>
+<p>I won&#8217;t go over the forecast, but it is sufficient today that the setup was marginal at best. There were two main plays: eastern CO and western KS / eastern MO. Well, there was no way we were driving way out to Missouri just to drive back to Colorado tomorrow. It&#8217;s a good thing, too, because the Kansas storms, while tornadic early on, quickly morphed into a giant linear unchaseable mess.</p>
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/A2mpsqAQZF8cuATwZQFT0w?feat=directlink"><img src="http://lh3.ggpht.com/_8Y30e9LNsno/TA8ylHoTAhI/AAAAAAAACoU/VBAwhWixeYY/s400/DSC_5371.JPG" alt="" /></a></p>
+<p>We went south from Ogallala on I-76, again to Fort Morgan, but this time we went due south. We had lunch in Limon, CO, where VORTEX2 had again taken over the town. I sought out the University of Michigan crew and again found Ari and his peers in the UMich scout van, and we got to shoot the breeze a bit before heading out.</p>
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/aaEEBM-GDer_CbM2CxG55A?feat=directlink"><img src="http://lh3.ggpht.com/_8Y30e9LNsno/TA8yncFKI3I/AAAAAAAACoU/a5Lr7gdScOg/s400/DSC_5387.JPG" alt="" /></a></p>
+<p>Then we went south all the way to Pueblo. We stopped a few times and almost turned around back north towards the slightly better air, but finally ended up in Pueblo with nothing to show for our travel except some stupid stratocumulus clouds. Our hotel was booked back in Limon, CO, so we were to head back there after dinner in Pueblo.</p>
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/7YJg4vPd1i3ojfih80BWMQ?feat=directlink"><img src="http://lh6.ggpht.com/_8Y30e9LNsno/TA8yooMg0RI/AAAAAAAACoU/zbA9LeCjJvQ/s400/DSC_5413.JPG" alt="" /></a></p>
+<p>Let me tell you, the stretch between Fort Morgan and Pueblo was some of the most remote, desolate land I have seen in a long time. There were blink-and-you-miss-it towns with populations in the dozens. There are no real crops to speak of &#8211; just wide open land, some barbed wire fences, and the occasional cow. The sign at the start of Route 71 south proclaimed &#8220;NO <span class="caps">GAS</span> <span class="caps">FOR</span> 75 <span class="caps">MILES</span>&#8221;. Yikes.</p>
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/fWE3gBOj_tJla38QHPz8rw?feat=directlink"><img src="http://lh6.ggpht.com/_8Y30e9LNsno/TA8yqHby_zI/AAAAAAAACoU/Hzzw7-wTjbg/s400/DSC_5441.JPG" alt="" /></a></p>
+<p>But I digress. As we were trying to figure out how to pay the bill at Cracker Barrel in Pueblo (mmm, meat loaf), suddenly everyone was gone. Roger had taken once look at the sky, and that was all he needed to change his mood from indifference to childlike excitement. There were some storms forming off the Palmer Divide and we booked it back north in the event that one survived.</p>
+<p>Well, one cell was able to take over, and boy it was a beauty on radar for a few scans. It had a nice updraft and a low shelf cloud that we could make out as we got closer. It had moderate rotation and even a tornado warning due to a sheriffnado &#8211; a tornado reported by law enforcement. Now, we had been watching the cell the entire time, and while there were many suspicious lowerings, they were ragged, and there was no way a tornado had dropped out of that storm.</p>
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/KXWHBly1NBDmuGyzjumpTw?feat=directlink"><img src="http://lh5.ggpht.com/_8Y30e9LNsno/TA8yv6PeItI/AAAAAAAACoU/MEwxx2p9feM/s400/DSC_5506.JPG" alt="" /></a></p>
+<p>We stopped for a bit to photograph the storm, but light was fading quickly and it was very tricky. As it turns out, the <span class="caps">NWS</span> had also issued the warning based off of a video feed on <a href="http://severestudios.com/">Severe Studios</a> from none other than Bill and Anna Stromberg, who were driving with us in van #2. Again, there was no tornado on this storm, but with a low-resolution streaming video, it is understandable how scud could be mistaken as such. Roger tried to convince the <span class="caps">NWS</span> that they were in the wrong, but it took a call from Bill and Anna to set things right.</p>
+<p>The storm took a hard right turn and dove southeast as it intensified, and it crossed Route 24 right alongside us. The result? We got to drive through both the rear flank and forward flank of the storm. For a good 10 miles we dealt with heavy rain, marble- and ping-pong-ball-sized hail, and gusty winds. You could barely hear yourself think from the sound of hail pelting the van, and I commend our driver Matt and the other drivers for safely maneuvering through that storm. Visiblity could not have been more than 50 feet in front of the vans, even with high-beams on. You&#8217;ll have to watch the videos I post later to get the full effect. Route 24 paralleled the storm and took us straight back to our hotel reservations in Limon.</p>
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/lDqviK1Q22WNyQ26-5EIqQ?feat=directlink"><img src="http://lh5.ggpht.com/_8Y30e9LNsno/TA8yyh-bM9I/AAAAAAAACoU/uWmQAONDuD4/s400/DSC_5634.JPG" alt="" /></a></p>
+<p>So, there you have it: a marginal day almost busted, but in the end produced a nice, marginal supercell &#8211; the best in Colorado for today, and we were lucky enough to see it&#8230; really closely! I&#8217;m quite happy.</p>
+<p>Tonight we got in pretty early &#8211; 9:30 PM &#8211; so we got a chance to relax a little and hit up the local establishment across the street to have a few drinks and share some storm stories with the locals and some other chasers. Also, Justin kicked my butt at pool.</p>
+<p>Tomorrow, well, that&#8217;s a totally different story. Roger has had this excitement in his voice whenever he speaks of the last days of this chase tour, and starting tomorrow we can expect a lot of great action in the CO / KS / NE / WY area.</p>
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/0aoM1-Rls5kPqkiRxKdreg?feat=directlink"><img src="http://lh4.ggpht.com/_8Y30e9LNsno/TA8ys8SdqYI/AAAAAAAACoU/zP-dhhQot0w/s400/DSC_5469.JPG" alt="" /></a></p>
+
+<div style="margin: 3em 0; border-bottom: 1px solid #CCCCCC"></div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript" src="http://disqus.com/forums/suckzone/embed.js"></script>
+<noscript><a href="http://suckzone.disqus.com/?url=ref">View the discussion thread.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+			
+		</div>
+		<div class="span-6 append-2 last">
+			
+			<!-- <div id="map" style="width: 230px; height: 300px;"></div>
+			<p id="map_time"></p> -->
+			
+			<div id="twitter_div">
+				<a class="twitter-timeline" href="https://twitter.com/suckzone" data-widget-id="592428431297613824">Tweets by @suckzone</a>
+				<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+			</div>
+		</div>
+	</div>
+	
+	
+	<div class="container" id="ft">
+		All content &copy; 2015 <a href="http://rockwellschrock.com/">Rockwell Schrock</a>. 
+		Powered by <a href="http://jekyllrb.com/">Jekyll</a>.
+	</div>
+	
+</div>
+
+<!-- Disqus -->
+<script type="text/javascript">
+//<![CDATA[
+(function() {
+		var links = document.getElementsByTagName('a');
+		var query = '?';
+		for(var i = 0; i < links.length; i++) {
+			if(links[i].href.indexOf('#disqus_thread') >= 0) {
+				query += 'url' + i + '=' + encodeURIComponent(links[i].href) + '&';
+			}
+		}
+		document.write('<script charset="utf-8" type="text/javascript" src="http://disqus.com/forums/suckzone/get_num_replies.js' + query + '"></' + 'script>');
+	})();
+//]]>
+</script>
+
+<!-- Google Analytics -->
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-4760872-7");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</body>
+</html>

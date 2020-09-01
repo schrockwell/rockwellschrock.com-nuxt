@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>The Suck Zone  &ndash; Okeene tornado </title>
+	
+	<link rel="alternate" title="" type="application/atom+xml" href="/storm-blog/atom.xml">
+	
+	<link rel="stylesheet" href="/storm-blog/styles/blueprint/screen.css" type="text/css" media="screen, projection">
+	<link rel="stylesheet" href="/storm-blog/styles/blueprint/print.css" type="text/css" media="print">	
+	<!--[if IE]><link rel="stylesheet" href="/storm-blog/styles/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
+	
+	<link rel="stylesheet" href="/storm-blog/styles/main.css" type="text/css">
+	
+	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.0/jquery.min.js"></script>
+	
+	<script type="text/javascript">
+		var radarOverlay, map, mapDiv, marker;
+		
+		var refreshMarker = function() {
+			mapDiv = document.getElementById("map");
+			if (mapDiv == null) {
+				return;
+			}
+
+			$.get("/storm-blog/spotter_feed.cfm", function(data) {
+				var objects = data.split("End:");
+				var found = false;
+
+				for (var i = 0; i < objects.length; i++) {
+					var object = objects[i];
+					if (object.indexOf("Rockwell Schrock") > -1) {
+						var lines = object.split("\n");
+						var coords = lines[1].split(" ")[1].split(",");
+						var utcTime = lines[2].split("\\n")[1];
+						var date = new Date(Date.parse(utcTime));
+						
+						var now = new Date();
+						var minutesAgo = Math.round((now.getTime() - date.getTime()) / 60000);
+
+						var latlng = new google.maps.LatLng(coords[0], coords[1]);
+
+						if (map == null) {
+							map = new google.maps.Map(mapDiv, {
+								zoom: 8,
+								mapTypeId: google.maps.MapTypeId.ROADMAP
+							});
+
+							marker = new google.maps.Marker({
+								map: map
+							});
+						}
+
+						map.setCenter(latlng);
+						marker.setPosition(latlng);
+						
+						$("#map_date").text(minutesAgo + " " + (minutesAgo == 1 ? "minute" : "minutes") + " ago (" + utcTime + ")");
+						
+						found = true;
+						break;
+					}
+				}
+				
+				if (found) {
+					refreshRadarOverlay();
+					$("#map, #map_info").show();
+				} else {
+					$("#map, #map_info").hide();
+				}
+
+			});
+		};
+
+		var refreshRadarOverlay = function() {
+			var imageBounds = new google.maps.LatLngBounds(
+			    new google.maps.LatLng(21.652538062803, -127.620375523875420),
+			    new google.maps.LatLng(50.406626367301044,-66.517937876818));
+			
+			var oldMap = map;
+
+			if (radarOverlay != null) {
+				oldMap = radarOverlay.getMap();
+				radarOverlay.setMap(null)
+			};
+
+			radarOverlay = new google.maps.GroundOverlay("http://radar.weather.gov/ridge/Conus/RadarImg/latest_radaronly.gif", imageBounds, { opacity: 0.5, map: oldMap });
+		};
+
+
+		setInterval(refreshMarker, 1 * 60 * 1000);
+
+		$(function() {
+			refreshMarker();
+
+			$("#radar_check").click(function() {
+				var check = $("#radar_check");
+				if (check.prop("checked")) {
+					radarOverlay.setMap(map);
+				} else {
+					radarOverlay.setMap(null);
+				}
+			});
+		});
+	
+	</script>
+	
+</head>
+<body>
+
+	<div class="container" id="hd">
+		
+	</div>
+	
+	<div class="container" id="nv">
+		
+		<ul>
+			<li><a href="/storm-blog/">Latest</a></li>
+			<li><a href="/storm-blog/2015.html">2015</a></li>
+			<li><a href="/storm-blog/2011.html">2011</a></li>
+			<li><a href="/storm-blog/2010.html">2010</a></li>
+			<li><a href="/storm-blog/2009.html">2009</a></li>
+			<li><a href="/storm-blog/2007.html">2007</a></li>
+			<li><a href="/storm-blog/2006.html">2006</a></li>			
+			<li><a href="/storm-blog/archive.html">Archive</a></li>
+			<!--<li><a href="/storm-blog/map.html">Live Map</a></li>-->
+			<li><a href="http://twitter.com/suckzone">Twitter</a></li>
+			<li><a href="/storm-blog/atom.xml">RSS</a></li>
+			<li><a href="/storm-blog/about.html">About</a></li>
+		</ul>
+		
+	</div>
+
+	<div class="container" id="notice">
+		<p>
+			<b>LIVE STREAMING</b> &ndash;
+			Download <a href="https://itunes.apple.com/app/id972909677">Periscope</a> and follow <a href="http://twitter.com/suckzone">@suckzone</a> to be notified when streams begin.
+		</p>
+	</div>
+	
+	<div class="container" id="map_info" style="display: none">
+		<div style="padding: 5px 20px; background-color: #333; color: #fff">
+			<div style="float: right">
+				Position updates every minute &ndash; 
+				<input type="checkbox" id="radar_check" checked="checked"><label for="radar_check" style="font-weight: normal">Radar overlay</label>
+			</div>
+			<b>LATEST POSITION</b> &ndash;
+			<span id="map_date"></span>
+		</div>
+	</div>
+
+	<div class="container" id="map" style="display: none">
+	
+	</div>
+	
+	
+	<div class="container" id="bd">
+		<div class="prepend-2 span-13 append-1">
+			
+			<h2>
+	<a class="invisible" href="">
+		May 23, 2011 &ndash; 
+		Okeene tornado
+	</a>
+</h2>
+
+
+
+<p style="text-align:center;"><a href="https://picasaweb.google.com/lh/photo/5ghVljcNnIvEvLTXlEq1rQ?feat=directlink"><img src="https://lh5.googleusercontent.com/-9wL_vc97k1c/TdsnZwu2anI/AAAAAAAADQM/bx5Ug89_waM/s400/DSC_3322.jpg" alt="" /></a></p>
+<ul>
+	<li><strong><a href="https://picasaweb.google.com/schrockwell/May232011?feat=directlink">Photo gallery</a></strong></li>
+	<li><strong>Trip meter:</strong> about 500 miles</li>
+	<li><strong>Time:</strong> 12 hours</li>
+	<li><strong>From:</strong> Springfield, MO <strong>To:</strong> Oklahoma City, OK</li>
+	<li><strong>Summary:</strong> Saw the full lifecycle of a supercell that dropped a brief tornado near Okeene, OK, and intercepted some other nice cells</li>
+</ul>
+<p>Another day, another tornado. I could get used to this.</p>
+<p>The severe parameters were insane for today. 5000 J/kg of <span class="caps">CAPE</span> in central OK, along with strong deep layer shear and surface dewpoints approaching 70 degrees. What more could you ask for?</p>
+<p>At breakfest in Springfield, I talked to a trucker whose truck was totaled by the tornado yesterday. He was in his sleeper cab riding out the storm when it got flipped on its side. He showed me pictures of all the trailers laid over, and one was even laying on top of several others! He is lucky to be alive.</p>
+<p>About an hour into my drive, I passed by Joplin, MO, which was devastated by the EF-4 yesterday. I did not pass through town, but I did observe quite a bit of damage from the interstate. Overturned semis, road signs and billboards completely gone, and many trees snapped completely in half. And I think the tornado only just skirted the interstate.</p>
+<p>Beyond that, I continued southeast all the way to Enid, OK. Cells were firing along the dryline at this time, so I dropped south a little to get in better play for the triple point. A cell popped up near Fairview, and it was pretty close, so I decided to sit and watch it for a bit.</p>
+<p style="text-align:center;"><a href="https://picasaweb.google.com/lh/photo/pU3M5AIiK7sic2B3m5CVfg?feat=directlink"><img src="https://lh3.googleusercontent.com/-O7BD14QtWtU/TdsnXLmfpHI/AAAAAAAADP4/t8yHINmjxMo/s400/DSC_3309.jpg" alt="" /></a></p>
+<p>Well.</p>
+<p>In about fifteen minutes, this little blip on radar transformed into a classic supercell thunderstorm. This storm was the only thing decent for miles, and it was not long before the chaser hordes converged on the severe-warned cell.</p>
+<p>The cell was in its prime, and it had a brief &#8220;spin-up&#8221;. A rotating lowering dropped down from the high base and tried to form a funnel, but failed, and the lowering disappeared.</p>
+<p style="text-align:center;"><a href="https://picasaweb.google.com/lh/photo/xRgIQAPLjn64QwY5iDRL5w?feat=directlink"><img src="https://lh3.googleusercontent.com/-aajhoLGiNto/TdsnXg219eI/AAAAAAAADP8/AdkE6rVibAE/s400/DSC_3310.jpg" alt="" /></a></p>
+<p>It was only a matter of time before the cell did the same thing again, and this time with a rousing success. A skinny, elongated funnel formed, with very visible circulation at the ground. The ground circulation trailed behind the funnel quite a bit, though storm motion was quite slow (about 25 <span class="caps">MPH</span>). I was in the perfect position the entire time, and it was a beautiful sight. It appeared to occur over open land, likely causing no damage.</p>
+<p style="text-align:center;"><a href="https://picasaweb.google.com/lh/photo/JCY942n-vdVRpZnqBEpcWw?feat=directlink"><img src="https://lh6.googleusercontent.com/-21VmX6FDqlA/TdsnYpfU2rI/AAAAAAAADQE/lLc12D_h4XQ/s400/DSC_3320.jpg" alt="" /></a></p>
+<p style="text-align:center;"><a href="https://picasaweb.google.com/lh/photo/Cru1gSUPiJDldGWoCz45Lw?feat=directlink"><img src="https://lh4.googleusercontent.com/-WNdHBhGr0aU/TdsnaYRfj3I/AAAAAAAADQQ/GQsQi_WyH6Y/s400/DSC_3324.jpg" alt="" /></a></p>
+<p>This storm was in its death throes, and slowly weakened, losing its tornado threat. When you&#8217;re in chase mode, you don&#8217;t get a break! There was another awesome-looking cell forming to the south, near Watonga, so I went after it. This cell was all by itself, and its updraft was very impressive.</p>
+<p style="text-align:center;"><a href="https://picasaweb.google.com/lh/photo/8WMrNlD9XzWDxGoNkREbQA?feat=directlink"><img src="https://lh5.googleusercontent.com/-0Z2a02ttuxw/Tdsnc_IOboI/AAAAAAAADQg/5uPnxHPZHo4/s400/DSC_3344.jpg" alt="" /></a></p>
+<p>As I got into position, the storm&#8217;s crazy structure became apparent. There was a bell shape to the updraft base, and the whole storm was wrapping up and tilting over.</p>
+<p style="text-align:center;"><a href="https://picasaweb.google.com/lh/photo/ZvL_bL6j8fgqgxGIU7BzaA?feat=directlink"><img src="https://lh4.googleusercontent.com/-ieXd6Hga4XE/TdsnennuoCI/AAAAAAAADQs/DkvARKm6Kyc/s400/DSC_3356.jpg" alt="" /></a></p>
+<p>There was even a nice, low wall cloud.</p>
+<p style="text-align:center;"><a href="https://picasaweb.google.com/lh/photo/RNPzFmLW_m50Pi8GrjCCRg?feat=directlink"><img src="https://lh4.googleusercontent.com/-oU1J1HZ7wzg/Tdsne9012EI/AAAAAAAADQw/IS_qcOLp5gs/s400/DSC_3363.JPG" alt="" /></a></p>
+<p>The storm tried and it tried, but it just could not produce a tornado.</p>
+<p style="text-align:center;"><a href="https://picasaweb.google.com/lh/photo/58St6UGa8gEUWUGPcdm_kw?feat=directlink"><img src="https://lh6.googleusercontent.com/-rsm_LADg-xs/Tdsnfe59_mI/AAAAAAAADQ0/FBnw3WlllSw/s400/DSC_3367.jpg" alt="" /></a></p>
+<p>This cell went kaput, so I tried one more intercept on a high-precipitation beast up near Kingfisher. This storm was a massive hailer, with a 65+ dBZ core and an intense velocity couplet.</p>
+<p style="text-align:center;"><a href="https://picasaweb.google.com/lh/photo/Vz_B62nNlBdspl3bV7PMKw?feat=directlink"><img src="https://lh3.googleusercontent.com/-Mj3c7Hgs_NY/Tdsngcg-r2I/AAAAAAAADQ8/CN3TfhzIVl4/s400/DSC_3392.JPG" alt="" /></a></p>
+<p>The storm motion was to the southeast, which was really confusing at first, because storms typically travel to the northeast. This threw me off several times today, and I was once again reminded of the fact as this monster shooed all the chasers south out of Kingfisher. The town was right underneath the rain-free meso as I was leaving, which was a little freaky, as there was major precipitation on three sides. 3-inch hail was reported with this cell. Ouch.</p>
+<p>I got one more surprise when I was reviewing the day&#8217;s video footage. When I was filling up in Kingfisher, I was taking video as lightning struck nearby. I jumped in the air, freaking out that I was trying to pump gas. Now I knew this stroke was very close because I heard a crackle and a pop right before the flash of light. Only when I watched the video did I realize just how close it had come.</p>
+<p style="text-align:center;"><a href="https://picasaweb.google.com/lh/photo/jAj2x28LqE-JKZtKx0rj-A?feat=directlink"><img src="https://lh5.googleusercontent.com/-GISmmSxJUro/TdsrSsrrAYI/AAAAAAAADR4/-6fYlR8V5Gw/s400/Screen%252520shot%2525202011-05-23%252520at%25252010.48.02%252520PM.jpg" alt="" /></a></p>
+<p>You can clearly see the lightning bolt in the left part of the frame, striking a puddle on the side of the road not twenty feet away. I&#8217;m almost certain that this isn&#8217;t an artifact of the camera, or some kind of reflection in the lens. Freaky, huh?</p>
+<p>Today marks tornado #5 for me. The storms were fantastic, the people were nice, and the tornado was the icing on the cake. In all, not a bad day to spend on the plains.</p>
+<p>Tomorrow has all the makings of a tornado outbreak. The <span class="caps">SPC</span> is already considering upgrading to high risk, which only happens a few days a year. They&#8217;re really serious this time. Tomorrow will be the last day of my chasecation, and it&#8217;s bound to be a memorable one.</p>
+
+<div style="margin: 3em 0; border-bottom: 1px solid #CCCCCC"></div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript" src="http://disqus.com/forums/suckzone/embed.js"></script>
+<noscript><a href="http://suckzone.disqus.com/?url=ref">View the discussion thread.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+			
+		</div>
+		<div class="span-6 append-2 last">
+			
+			<!-- <div id="map" style="width: 230px; height: 300px;"></div>
+			<p id="map_time"></p> -->
+			
+			<div id="twitter_div">
+				<a class="twitter-timeline" href="https://twitter.com/suckzone" data-widget-id="592428431297613824">Tweets by @suckzone</a>
+				<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+			</div>
+		</div>
+	</div>
+	
+	
+	<div class="container" id="ft">
+		All content &copy; 2015 <a href="http://rockwellschrock.com/">Rockwell Schrock</a>. 
+		Powered by <a href="http://jekyllrb.com/">Jekyll</a>.
+	</div>
+	
+</div>
+
+<!-- Disqus -->
+<script type="text/javascript">
+//<![CDATA[
+(function() {
+		var links = document.getElementsByTagName('a');
+		var query = '?';
+		for(var i = 0; i < links.length; i++) {
+			if(links[i].href.indexOf('#disqus_thread') >= 0) {
+				query += 'url' + i + '=' + encodeURIComponent(links[i].href) + '&';
+			}
+		}
+		document.write('<script charset="utf-8" type="text/javascript" src="http://disqus.com/forums/suckzone/get_num_replies.js' + query + '"></' + 'script>');
+	})();
+//]]>
+</script>
+
+<!-- Google Analytics -->
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-4760872-7");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</body>
+</html>

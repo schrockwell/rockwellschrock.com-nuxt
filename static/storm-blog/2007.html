@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>The Suck Zone  &ndash; 2007 </title>
+	
+	<link rel="alternate" title="" type="application/atom+xml" href="/storm-blog/atom.xml">
+	
+	<link rel="stylesheet" href="/storm-blog/styles/blueprint/screen.css" type="text/css" media="screen, projection">
+	<link rel="stylesheet" href="/storm-blog/styles/blueprint/print.css" type="text/css" media="print">	
+	<!--[if IE]><link rel="stylesheet" href="/storm-blog/styles/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
+	
+	<link rel="stylesheet" href="/storm-blog/styles/main.css" type="text/css">
+	
+	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.0/jquery.min.js"></script>
+	
+	<script type="text/javascript">
+		var radarOverlay, map, mapDiv, marker;
+		
+		var refreshMarker = function() {
+			mapDiv = document.getElementById("map");
+			if (mapDiv == null) {
+				return;
+			}
+
+			$.get("/storm-blog/spotter_feed.cfm", function(data) {
+				var objects = data.split("End:");
+				var found = false;
+
+				for (var i = 0; i < objects.length; i++) {
+					var object = objects[i];
+					if (object.indexOf("Rockwell Schrock") > -1) {
+						var lines = object.split("\n");
+						var coords = lines[1].split(" ")[1].split(",");
+						var utcTime = lines[2].split("\\n")[1];
+						var date = new Date(Date.parse(utcTime));
+						
+						var now = new Date();
+						var minutesAgo = Math.round((now.getTime() - date.getTime()) / 60000);
+
+						var latlng = new google.maps.LatLng(coords[0], coords[1]);
+
+						if (map == null) {
+							map = new google.maps.Map(mapDiv, {
+								zoom: 8,
+								mapTypeId: google.maps.MapTypeId.ROADMAP
+							});
+
+							marker = new google.maps.Marker({
+								map: map
+							});
+						}
+
+						map.setCenter(latlng);
+						marker.setPosition(latlng);
+						
+						$("#map_date").text(minutesAgo + " " + (minutesAgo == 1 ? "minute" : "minutes") + " ago (" + utcTime + ")");
+						
+						found = true;
+						break;
+					}
+				}
+				
+				if (found) {
+					refreshRadarOverlay();
+					$("#map, #map_info").show();
+				} else {
+					$("#map, #map_info").hide();
+				}
+
+			});
+		};
+
+		var refreshRadarOverlay = function() {
+			var imageBounds = new google.maps.LatLngBounds(
+			    new google.maps.LatLng(21.652538062803, -127.620375523875420),
+			    new google.maps.LatLng(50.406626367301044,-66.517937876818));
+			
+			var oldMap = map;
+
+			if (radarOverlay != null) {
+				oldMap = radarOverlay.getMap();
+				radarOverlay.setMap(null)
+			};
+
+			radarOverlay = new google.maps.GroundOverlay("http://radar.weather.gov/ridge/Conus/RadarImg/latest_radaronly.gif", imageBounds, { opacity: 0.5, map: oldMap });
+		};
+
+
+		setInterval(refreshMarker, 1 * 60 * 1000);
+
+		$(function() {
+			refreshMarker();
+
+			$("#radar_check").click(function() {
+				var check = $("#radar_check");
+				if (check.prop("checked")) {
+					radarOverlay.setMap(map);
+				} else {
+					radarOverlay.setMap(null);
+				}
+			});
+		});
+	
+	</script>
+	
+</head>
+<body>
+
+	<div class="container" id="hd">
+		
+	</div>
+	
+	<div class="container" id="nv">
+		
+		<ul>
+			<li><a href="/storm-blog/">Latest</a></li>
+			<li><a href="/storm-blog/2015.html">2015</a></li>
+			<li><a href="/storm-blog/2011.html">2011</a></li>
+			<li><a href="/storm-blog/2010.html">2010</a></li>
+			<li><a href="/storm-blog/2009.html">2009</a></li>
+			<li><a href="/storm-blog/2007.html">2007</a></li>
+			<li><a href="/storm-blog/2006.html">2006</a></li>			
+			<li><a href="/storm-blog/archive.html">Archive</a></li>
+			<!--<li><a href="/storm-blog/map.html">Live Map</a></li>-->
+			<li><a href="http://twitter.com/suckzone">Twitter</a></li>
+			<li><a href="/storm-blog/atom.xml">RSS</a></li>
+			<li><a href="/storm-blog/about.html">About</a></li>
+		</ul>
+		
+	</div>
+
+	<div class="container" id="notice">
+		<p>
+			<b>LIVE STREAMING</b> &ndash;
+			Download <a href="https://itunes.apple.com/app/id972909677">Periscope</a> and follow <a href="http://twitter.com/suckzone">@suckzone</a> to be notified when streams begin.
+		</p>
+	</div>
+	
+	<div class="container" id="map_info" style="display: none">
+		<div style="padding: 5px 20px; background-color: #333; color: #fff">
+			<div style="float: right">
+				Position updates every minute &ndash; 
+				<input type="checkbox" id="radar_check" checked="checked"><label for="radar_check" style="font-weight: normal">Radar overlay</label>
+			</div>
+			<b>LATEST POSITION</b> &ndash;
+			<span id="map_date"></span>
+		</div>
+	</div>
+
+	<div class="container" id="map" style="display: none">
+	
+	</div>
+	
+	
+	<div class="container" id="bd">
+		<div class="prepend-2 span-13 append-1">
+			
+			<div class="yearCallout">
+	<h1>2007 &ndash; A High Plains Adventure</h1>
+	<p>
+		In 2007, my good friend and high school classmate <a href="http://jakerozin.com">Jake Rozin</a> and I decided to chase under our own command. We travelled all across the U.S. from May 10&ndash;18, covering 4,600 miles in just eight days.
+	</p>
+	<p>
+		We spent much time in the northern states such as Minnesota, North Dakota, and Michigan, trying to avoid the dampening effects of the dreaded cap, an atmospheric temperature inversion that limits the vertical development of storms. The highlight of this trip was a tornado-warned supercell along the northern peninsula of Michigan.
+	</p>
+</div>
+
+<h3>Highlights Video</h3>
+<p style="text-align: center;">
+	<object height="314" width="510">
+		<param value="http://www.youtube.com/v/c3_uprS7jP4&amp;hl=en" name="movie">
+		<embed height="314" width="510" type="application/x-shockwave-flash" src="http://www.youtube.com/v/c3_uprS7jP4&amp;hl=en">
+	</object>
+</p>
+
+<h3>The Best Worst Clips (Outtakes)</h3>
+<p style="text-align: center;">
+	<object width="510" height="291"><param name="allowfullscreen" value="true" /><param name="allowscriptaccess" value="always" /><param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=2403554&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1" /><embed src="http://vimeo.com/moogaloop.swf?clip_id=2403554&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="510" height="291"></embed></object>
+</p>
+
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+		<div class="indexPost">
+	<h2>
+		<a class="invisible" href="/storm-blog/2007/01/01/it-starts-again.html">
+			January 01, 2007 &ndash; 
+			It Starts Again
+		</a>
+	</h2>
+	
+	
+	
+	<p>As 2006 draws to a close and <a href="http://texastailchaser.com/humor/SDS/index.htm"><span class="caps">SDS</span> sets in</a>, the time has come to start planning for the 2007 chase season. The chase team this year will be made up of myself and my great friend, Jake. We will begin our treck westward around May 5, depending entirely on atmospheric conditions and when our final exams are scheduled. It could be days before, or it could be weeks later; Mother Nature will decide. It will take about three days of travelling just to get into chase territory, with the third travel day being a potential chase day. Then we will chase around for a week or so, and schelp back to boring Massachusetts.</p>
+<p>We will be documenting the snot out of everything. Jake will man the camcorder, I the trusty Nikon <span class="caps">DSLR</span>. The final product will be a storm chasing <span class="caps">DVD</span> so extravagent, so outlandish, so amazing, that it will blow away all precedents. You&#8217;ll see. Blog posts will recount our exploits step-by-step, and you will be able to follow along with realtime <span class="caps">GPS</span> tracking and a dashboard webcam. Just you wait!</p>
+	
+	<p class="bottom quiet" style="font-style:italic;">
+		<a class="quiet" href="/storm-blog/2007/01/01/it-starts-again.html#disqus_thread">View Comments</a>
+	</p>
+	<div style="clear:both"></div>
+</div>
+	
+
+	
+	
+	
+		<div class="indexPost">
+	<h2>
+		<a class="invisible" href="/storm-blog/2007/03/10/video-spring-break-preparations.html">
+			March 10, 2007 &ndash; 
+			Video: Spring Break Preparations
+		</a>
+	</h2>
+	
+	
+	
+	<div style="text-align: center">
+<p><embed align="middle" flashvars="playerMode=embedded" salign="TL" scale="noScale" bgcolor="#ffffff" quality="best" src="http://video.google.com/googleplayer.swf?docId=-6302705678129860588&amp;hl=en" type="application/x-shockwave-flash" id="VideoPlayback" style="width: 400px; height: 326px;"></p>
+</div>
+	
+	<p class="bottom quiet" style="font-style:italic;">
+		<a class="quiet" href="/storm-blog/2007/03/10/video-spring-break-preparations.html#disqus_thread">View Comments</a>
+	</p>
+	<div style="clear:both"></div>
+</div>
+	
+
+	
+	
+	
+		<div class="indexPost">
+	<h2>
+		<a class="invisible" href="/storm-blog/2007/05/07/video-curse-of-the-windshield.html">
+			May 07, 2007 &ndash; 
+			Video: Curse of the Windshield
+		</a>
+	</h2>
+	
+	
+	
+	<div style="text-align:center">
+<p><embed align="middle" flashvars="playerMode=embedded" salign="TL" scale="noScale" bgcolor="#ffffff" quality="best" id="VideoPlayback" src="http://video.google.com/googleplayer.swf?docId=287300482430396378&amp;hl=en" type="application/x-shockwave-flash" style="width: 400px; height: 326px;"></p>
+</div>
+<p>So the windshield screwed us over for this week. The earliest I could get it replaced would be Tuesday, and by the time that happened and we drove west, the trough in the southern Plains which would have produced the severe weather would have passed. We could be on the road right now, but instead we&#8217;ll have to wait for a few more days.</p>
+<p>I will get the windshield replaced this week, and then we will look at the patterns next week for possibly some high Plains chasing next Wednesday, assuming sufficient moisture can get that far north.</p>
+<h3>Update</h3>
+<p>Okay, so here&#8217;s the new plan. The fairly-recent 12Z <span class="caps">GFS</span> model run reveals some chase-worthy setups for Saturday and Sunday, and again later next week. That being the case, and assuming the windshield is replaced without any problems, we&#8217;re going to head out Thursday morning.</p>
+	
+	<p class="bottom quiet" style="font-style:italic;">
+		<a class="quiet" href="/storm-blog/2007/05/07/video-curse-of-the-windshield.html#disqus_thread">View Comments</a>
+	</p>
+	<div style="clear:both"></div>
+</div>
+	
+
+	
+	
+	
+		<div class="indexPost">
+	<h2>
+		<a class="invisible" href="/storm-blog/2007/05/09/chaser-positioning-system.html">
+			May 09, 2007 &ndash; 
+			Chaser Positioning System
+		</a>
+	</h2>
+	
+	
+	
+	<p>Well the car is locked down, wired up, and tricked out. Thanks to the amalgamation of several disparate technologies, you, the cyber-chaser, can now follow along in our misadventures. The patented Chaser Positioning System™ &#8211; <span class="caps">CPS</span> for short &#8211; provides real-time updates of location, speed, bearing, and position relative to storms. It will also have a near-real-time webcam feed from the car dashboard (provided I can fix the program that enables this feature during the car ride).</p>
+<p><a href="http://conceptware.net/gps/default2.aspx">You can access the <span class="caps">CPS</span> here.</a></p>
+	
+	<p class="bottom quiet" style="font-style:italic;">
+		<a class="quiet" href="/storm-blog/2007/05/09/chaser-positioning-system.html#disqus_thread">View Comments</a>
+	</p>
+	<div style="clear:both"></div>
+</div>
+	
+
+	
+	
+	
+		<div class="indexPost">
+	<h2>
+		<a class="invisible" href="/storm-blog/2007/05/10/partway-there.html">
+			May 10, 2007 &ndash; 
+			Partway there
+		</a>
+	</h2>
+	
+	
+	
+	<p>Okay, so today didn&#8217;t go exactly as planned. We made really good time until we ran into construction and lot of traffic on I-80W in Pennsylvania. We cut today&#8217;s trip short and are staying at the Comfort Inn in New Columbia, PA.</p>
+<p>We got to watch some fun little storms fire up in western MA, and tracked them on the XM WxWorx system. All you out folks there in readerland got to follow along, as well.</p>
+<p>Going to go to sleep soon to get an early start tomorrow. Forecast is looking pretty consistent for Saturday and Sunday! Can&#8217;t wait.</p>
+	
+	<p class="bottom quiet" style="font-style:italic;">
+		<a class="quiet" href="/storm-blog/2007/05/10/partway-there.html#disqus_thread">View Comments</a>
+	</p>
+	<div style="clear:both"></div>
+</div>
+	
+
+	
+	
+	
+		<div class="indexPost">
+	<h2>
+		<a class="invisible" href="/storm-blog/2007/05/11/yeah-we-kinda-ruled-today.html">
+			May 11, 2007 &ndash; 
+			"Yeah, we kinda ruled today..."
+		</a>
+	</h2>
+	
+	
+	
+	<p>&#8230;said Jake, to sum up today&#8217;s trek. We nearly doubled yesterday&#8217;s mileage (roughly 450 miles), and put in about 800 miles today! We left around 7 AM and cautiously navigated the Pennsylvania fog, blowing by all the I-80 construction without a hitch. There were very few slowdowns after that. Interstate 80 became home as we cruised west, and mountains and forests gradually slipped into gently rolling fields and pastures.</p>
+<p>We survived the roads of Ohio, and then sped through Indiana without even stopping for a break. Illinois was a little trafficky and more populated, because we were skirting the southern suburbs of Chicago. Finally, we turned north on I-39 and settled in to watch the golden sun slide below the horizon, turning wind farms and grain silos into sillhouettes. Now we&#8217;re in Wisconsin just south of Madison, deciding on tomorrow&#8217;s possibility for blasting west into South Dakota in time for storm initiation.</p>
+<p>Yeah, it was a good day.</p>
+	
+	<p class="bottom quiet" style="font-style:italic;">
+		<a class="quiet" href="/storm-blog/2007/05/11/yeah-we-kinda-ruled-today.html#disqus_thread">View Comments</a>
+	</p>
+	<div style="clear:both"></div>
+</div>
+	
+
+	
+	
+	
+		<div class="indexPost">
+	<h2>
+		<a class="invisible" href="/storm-blog/2007/05/12/wait-a-second-minnesota.html">
+			May 12, 2007 &ndash; 
+			Wait a second... Minnesota?
+		</a>
+	</h2>
+	
+	
+	
+	<p>Yup, that&#8217;s the plan. But how&#8217;d we get here in the first place?</p>
+<p>We&#8217;re actually staying in Grand Forks, North Dakota, barely a mile from the Minnesota border. The day started early with us heading north through Madison and out of Wisconsin, then heading west with the initial hope of finding some storm action in South Dakota. We descended into the lush Mississippi River valley, then rose back out into the vast flatness that is southern Minnesota. In fact, everything was pretty freakin&#8217; flat from there on out. We took I-90 due west, then turned north on I-29 as the wimpy South Dakota storms petered out as the afternoon wore on. Not a lot happened after that. There was some more flatness, and two dudes on fast motorcycles who kept racing us on the highway. Well, they pretended to race us, at least, since we had no chance of ever catching them.</p>
+<p>We had a little trouble finding a room in Great Forks. Apparently, the nearby University of North Dakota holds graduation tomorrow, so we had to call around for a long time before snagging the last room at the &#8220;C&#8217;mon Inn,&#8221; which is actually really nice and has a cool indoor courtyard with waterfalls and plastic trees. The idea is to position ourselves equidistant from a few possible plays for tomorrow&#8217;s storms: mainly, extreme northern Minnesota, and northeastern South Dakota. The <span class="caps">SPC</span> is calling for good stuff in Minnesota, but looking at the models I disagree with that forecast and see South Dakota as a more favorable region. We will see how things turn out when the new outlooks are posted tomorrow morning.</p>
+<p><a href="http://maps.google.com/maps/ms?ie=UTF8&amp;hl=en&amp;msa=0&amp;om=1&amp;msid=106942326439865455629.0000011283bade5b0bb56&amp;ll=43.2932,-84.418945&amp;spn=14.452952,44.296875&amp;z=5">Here&#8217;s a map</a> that indicates our route so far and our nightly stops. We did about 700 miles today, bringing the total mileage in excess of 2,000 miles. Whoa.</p>
+<p>Today would have been fantastic, if not for the extremely strong cap. All day, the skies were remniscent of what an &#8220;early morning&#8221; textbook storm day should look like. Altocumulus castellanas clouds were everywhere, indicating good instability trapped beneath a layer of stronger convective inhibition (the cap). The cap is just a layer of warm air aloft that inhibits vertical development of storms. On a good day, the cap would eventually break and allow storms to fire by mid-afternoon, but moisture was insufficiently shallow and the stupid cap was just too damn strong to let this happen, so the conditions did not improve as the day went on. Blech.</p>
+<p>One last note: Montana is looking good for severe weather tomorrow, but we decided that Big Sky Country was just too distant, especially with a somewhat-decent setup in the upper Mississippi valley for the next two consecutive days. We&#8217;d never make it back east for Monday&#8217;s storms in MI and WI if we went to Montana tomorrow.</p>
+<p>Northern Minnesota, here we come!</p>
+	
+	<p class="bottom quiet" style="font-style:italic;">
+		<a class="quiet" href="/storm-blog/2007/05/12/wait-a-second-minnesota.html#disqus_thread">View Comments</a>
+	</p>
+	<div style="clear:both"></div>
+</div>
+	
+
+	
+	
+	
+		<div class="indexPost">
+	<h2>
+		<a class="invisible" href="/storm-blog/2007/05/13/day-four-frustration.html">
+			May 13, 2007 &ndash; 
+			Day Fo(u)r Frustration
+		</a>
+	</h2>
+	
+	
+	
+	<p>Stupid, stupid cap.</p>
+<p><a href="http://maps.google.com/maps/ms?ie=UTF8&amp;hl=en&amp;msa=0&amp;om=1&amp;msid=106942326439865455629.0000011289214910a1fda&amp;ll=47.754098,-94.01001&amp;spn=3.33869,7.470703&amp;z=7">Here&#8217;s a map</a> of today&#8217;s adventure. Follow along while you read, if you like.</p>
+<p>Out initial thinking was that storms would fire in southern Canada (due to better upper-air divergence) and move south-easterly into the US, where we would gladly welcome them into our country. So we drove north, and then west, to International Falls, a mere stone&#8217;s throw from Canada. We could literally see it right across that little river.</p>
+<p>Then we made a realization: sitting right on the border severely limited our travel options if storms were to initiate. After all, we could only ever travel south from that position, anyway. We grabbed lunch and ate it just outside of the southern end of the town. It soon became apparent that no Canadian storms were planning to smuggle themselves into the U.S., so we went further south to bide our time. We found a beautiful rest area in Orr, with a little playground, a lake, and &#8211; most importantly &#8211; a Porta-Potty&#8482;. We chilled there for several hours, tossing a Frisbee&#8482;, playing Wiffle-Ball&#8482;, photographing the freight trains that went by, and generally enjoying the downtime.</p>
+<p>As we expected, the <span class="caps">SPC</span> issued a mesoscale discussion around 7 PM <span class="caps">CDT</span>, outlining the possibility for the cap to break west and south of our position. We cruised further south out of Orr (population 600-something), targeting Grand Rapids (population 2000-something). However, an hour later another severe weather outlook was released, and this time the outlook was abysmal. The cap was just too strong, and the possibility for storms in our target area faded to nothing. We accepted defeat and drove another hour southeast to Duluth (population 86,000), where we are currently residing at (surprise!) a Comfort Inn. They should sponsor us or something.</p>
+<p>Despite the severe weather bust, the day had its moments. For the first time, we were traveling off the interstate highway, and it was a very different experience. Some of the roads this far north are absolutely deserted. We passed one town with a population of 57. There aren&#8217;t even many farms up here; it&#8217;s mostly small houses and forested areas with some light logging. It is very different from the southern part of the state.</p>
+<p>Today was frustrating, but it was more of a unique experience than anything else. It&#8217;s not as if we missed any storms because we made a bad decision. After all, there were no storms to be chased in the first place. We could have trekked out to Montana and chased that gusty, outflow-dominant, mesoscale mess, but then tomorrow&#8217;s cold-front chase in MN and WI would have been out of reach. Overall, today was maybe our most interesting so far.</p>
+	
+	<p class="bottom quiet" style="font-style:italic;">
+		<a class="quiet" href="/storm-blog/2007/05/13/day-four-frustration.html#disqus_thread">View Comments</a>
+	</p>
+	<div style="clear:both"></div>
+</div>
+	
+
+	
+	
+	
+		<div class="indexPost">
+	<h2>
+		<a class="invisible" href="/storm-blog/summary/2007/05/14/success.html">
+			May 14, 2007 &ndash; 
+			Success
+		</a>
+	</h2>
+	
+	
+	
+	<p style="text-align:center;"><a href="http://1.bp.blogspot.com/_8Y30e9LNsno/RklNLhNrkOI/AAAAAAAAAhg/sVMz-jgiaHM/s1600-h/IMG_2871.JPG"><img src="http://1.bp.blogspot.com/_8Y30e9LNsno/RklNLhNrkOI/AAAAAAAAAhg/sVMz-jgiaHM/s400/IMG_2871.JPG" alt="" /></a></p>
+<p><em>This post was written by Jake Rozin.</em></p>
+<p><a href="http://maps.google.com/maps/ms?ie=UTF8&amp;hl=en&amp;msa=0&amp;ll=46.065608,-90&amp;spn=1.817955,5.537109&amp;z=8&amp;om=1&amp;msid=106942326439865455629.000001128e2888350e57c">Here is another map of today&#8217;s progress.</a></p>
+<h3>3 PM &#8211; Waiting in Anticipation</h3>
+<p>This morning we woke to the sound of thunder as a small storm system passed over Duluth. After jumping out of bed, grabbing breakfast, and filling up on gas, we jumped into our trusty chasing-mobile and were off east. Headed on rte. 2 we made our way into Wisconsin and drove alongside a beautifully formed shelf cloud (pictures to come later). We then continued through WS and crossed into the upper peninsula of Michigan where we wait at a crossroads for warm enough air to break the cap. If it holds, we will wait for a cold front that has been a day behind us to catch up. We currently sit in an abandoned baseball field in Watersmeet, MI. Hope to see some activity soon.</p>
+<h3>Summary</h3>
+<p>After Watersmeet lost its charm, we decided to meet our cold front south of the border of Michigan and Wisconsin. We drove south to Eagle River and found a beautiful field tucked away from the road where we sat and waited. For several hours we watched the patch of would-be-severe weather creep up to us, pass, then continue on to the east without developing. It was then when we decided to drive south (then east) to try to intercept it as the system matured. After perhaps thirty minutes of driving, it became clear that &#8220;The little storm that could&#8221; could not. We shifted our attention to the Northern Peninsula of Michigan to where a huge system had engulfed Duluth and had continued heading east. This was our chance.</p>
+<p>We rushed back the way we came, through Eagle River, over the border, made a left at Watersmeet, and headed west on Route 2. &#8220;You are headed towards a twisting storm,&#8221; piped the computer (the first noise it has made all trip). We parked by the road and watched as a huge mass came towards us. To the south was a precipitation screen, and to the west was a swirling cloud ready to eat us alive. Lightening was flashing on all sides but one, so we got back in the car and headed back to Watersmeet, then south. Soon, rain was coming down in torrents and visibility was nearly impossible. Then, I heard something slam into the windshield. Then the roof. It made a metallic thud as it bounced off onto the road. Quarter to half inch in diameter hail was now falling as fast as the rain. Rockwell feared for the newly replaced windshield as I tried to stay on the road.</p>
+<p>After a bit of driving, we got out of the hail storm and were headed south. While deciding on where to spend the night, the thought of Iron Mountain came up. It was north east of where we were, so it would allow us to skirt around the edge of the storm that we had been trying to escape the past hour or so. As we made our way, the sun set behind us as we experienced one of the most amazing lightening shows I have ever seen. We pulled off the road to watch it for a bit, and that is where I snagged the picture below.</p>
+<p>Tired, but victorious, we rolled into Iron Mountain and crashed at the first hotel we could find. Not a bad day. Not bad at all.</p>
+<p>Jake</p>
+	
+	<p class="bottom quiet" style="font-style:italic;">
+		<a class="quiet" href="/storm-blog/summary/2007/05/14/success.html#disqus_thread">View Comments</a>
+	</p>
+	<div style="clear:both"></div>
+</div>
+	
+
+	
+	
+	
+		<div class="indexPost">
+	<h2>
+		<a class="invisible" href="/storm-blog/summary/2007/05/15/more-fun-without-the-sun.html">
+			May 15, 2007 &ndash; 
+			More fun without the sun
+		</a>
+	</h2>
+	
+	
+	
+	<p>Today was another great day, even though we were just a little late getting to everything we wanted to see. We targeted the area ahead of the advancing cold front, which at the time was developing from northern Minnesota all the way into Kansas. This put our target in the central part of Michigan. This air just in advance of the cold front had a good setup for severe weather, but a very small chance of supercell storms because of the weak wind shear.</p>
+<p>We drove back eastward across the upper peninsula of Michigan, and crossed over the Macinac Bridge, which connects the upper and lower parts of the state. When we stopped for a break soon thereafter, we found that the temperatures had risen nearly 20 degrees from where we had left; we&#8217;d overtaken the cold front. That didn&#8217;t last for long, however, as the front blasted east. We finally caught up with some cells in central Michigan, and made several stops and turnarounds to get a good look at the storms. The storms were forming explosively as the cap finally broke, and it was amazing to watch the giant towers of clouds go up. We have some good video and photographs to show for this effort. The two biggest difficulties were seeing structure through low cloud cover and finding good road options. It was hard to find roads that had visibility of the horizon (stupid trees), and it was also difficult to find roads that didn&#8217;t lead to major metropolitan areas (i.e. Detroit).</p>
+<p>Finally, our options ran out, and the cold front caught up with us, bringing to us strong winds and heavy rain, and briefly some pea-sized hail. We had planned in advance for this, and took some shelter from the hail at a gas station off the interstate.</p>
+<p>In our quest to stay in a different state every night, we drove further south and are now residing at the Red Roof Inn in Toledo, OH. Unfortunately, it looks like our chasing is done for this trip. This cold front will leave a pool of stable air behind it, removing the chance of chase-worthy severe weather for at least a week or two. We can&#8217;t afford to stay out that long, so we are going to find some amusement for the next few days as we weave our way back home.</p>
+	
+	<p class="bottom quiet" style="font-style:italic;">
+		<a class="quiet" href="/storm-blog/summary/2007/05/15/more-fun-without-the-sun.html#disqus_thread">View Comments</a>
+	</p>
+	<div style="clear:both"></div>
+</div>
+	
+
+	
+	
+	
+		<div class="indexPost">
+	<h2>
+		<a class="invisible" href="/storm-blog/2007/05/16/homeward-bound.html">
+			May 16, 2007 &ndash; 
+			Homeward Bound
+		</a>
+	</h2>
+	
+	
+	
+	<p>Soooooo today had an extremely slight chance for storms in Wisconsin and Illinois. We slept in too late and decided it was too late to drive out west that far, in addition to being more distance we&#8217;d just have to backtrack in the future. The chance for severe weather was just too small, so we headed home.</p>
+<p>There is nothing else to report. Tonight we are sleeping at Vassar College, where Jake&#8217;s sister has taken us in. We&#8217;ll be home tomorrow night.</p>
+<p>Oh, and nothing happened in Wisconsin or Illinois today. Whew.</p>
+	
+	<p class="bottom quiet" style="font-style:italic;">
+		<a class="quiet" href="/storm-blog/2007/05/16/homeward-bound.html#disqus_thread">View Comments</a>
+	</p>
+	<div style="clear:both"></div>
+</div>
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+
+			
+		</div>
+		<div class="span-6 append-2 last">
+			
+			<!-- <div id="map" style="width: 230px; height: 300px;"></div>
+			<p id="map_time"></p> -->
+			
+			<div id="twitter_div">
+				<a class="twitter-timeline" href="https://twitter.com/suckzone" data-widget-id="592428431297613824">Tweets by @suckzone</a>
+				<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+			</div>
+		</div>
+	</div>
+	
+	
+	<div class="container" id="ft">
+		All content &copy; 2015 <a href="http://rockwellschrock.com/">Rockwell Schrock</a>. 
+		Powered by <a href="http://jekyllrb.com/">Jekyll</a>.
+	</div>
+	
+</div>
+
+<!-- Disqus -->
+<script type="text/javascript">
+//<![CDATA[
+(function() {
+		var links = document.getElementsByTagName('a');
+		var query = '?';
+		for(var i = 0; i < links.length; i++) {
+			if(links[i].href.indexOf('#disqus_thread') >= 0) {
+				query += 'url' + i + '=' + encodeURIComponent(links[i].href) + '&';
+			}
+		}
+		document.write('<script charset="utf-8" type="text/javascript" src="http://disqus.com/forums/suckzone/get_num_replies.js' + query + '"></' + 'script>');
+	})();
+//]]>
+</script>
+
+<!-- Google Analytics -->
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-4760872-7");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</body>
+</html>

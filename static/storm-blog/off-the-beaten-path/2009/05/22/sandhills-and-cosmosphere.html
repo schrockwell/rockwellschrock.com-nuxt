@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>The Suck Zone  &ndash; Off the Beaten Path: Nebraska sandhills and Kansas Cosmosphere </title>
+	
+	<link rel="alternate" title="" type="application/atom+xml" href="/storm-blog/atom.xml">
+	
+	<link rel="stylesheet" href="/storm-blog/styles/blueprint/screen.css" type="text/css" media="screen, projection">
+	<link rel="stylesheet" href="/storm-blog/styles/blueprint/print.css" type="text/css" media="print">	
+	<!--[if IE]><link rel="stylesheet" href="/storm-blog/styles/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
+	
+	<link rel="stylesheet" href="/storm-blog/styles/main.css" type="text/css">
+	
+	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.0/jquery.min.js"></script>
+	
+	<script type="text/javascript">
+		var radarOverlay, map, mapDiv, marker;
+		
+		var refreshMarker = function() {
+			mapDiv = document.getElementById("map");
+			if (mapDiv == null) {
+				return;
+			}
+
+			$.get("/storm-blog/spotter_feed.cfm", function(data) {
+				var objects = data.split("End:");
+				var found = false;
+
+				for (var i = 0; i < objects.length; i++) {
+					var object = objects[i];
+					if (object.indexOf("Rockwell Schrock") > -1) {
+						var lines = object.split("\n");
+						var coords = lines[1].split(" ")[1].split(",");
+						var utcTime = lines[2].split("\\n")[1];
+						var date = new Date(Date.parse(utcTime));
+						
+						var now = new Date();
+						var minutesAgo = Math.round((now.getTime() - date.getTime()) / 60000);
+
+						var latlng = new google.maps.LatLng(coords[0], coords[1]);
+
+						if (map == null) {
+							map = new google.maps.Map(mapDiv, {
+								zoom: 8,
+								mapTypeId: google.maps.MapTypeId.ROADMAP
+							});
+
+							marker = new google.maps.Marker({
+								map: map
+							});
+						}
+
+						map.setCenter(latlng);
+						marker.setPosition(latlng);
+						
+						$("#map_date").text(minutesAgo + " " + (minutesAgo == 1 ? "minute" : "minutes") + " ago (" + utcTime + ")");
+						
+						found = true;
+						break;
+					}
+				}
+				
+				if (found) {
+					refreshRadarOverlay();
+					$("#map, #map_info").show();
+				} else {
+					$("#map, #map_info").hide();
+				}
+
+			});
+		};
+
+		var refreshRadarOverlay = function() {
+			var imageBounds = new google.maps.LatLngBounds(
+			    new google.maps.LatLng(21.652538062803, -127.620375523875420),
+			    new google.maps.LatLng(50.406626367301044,-66.517937876818));
+			
+			var oldMap = map;
+
+			if (radarOverlay != null) {
+				oldMap = radarOverlay.getMap();
+				radarOverlay.setMap(null)
+			};
+
+			radarOverlay = new google.maps.GroundOverlay("http://radar.weather.gov/ridge/Conus/RadarImg/latest_radaronly.gif", imageBounds, { opacity: 0.5, map: oldMap });
+		};
+
+
+		setInterval(refreshMarker, 1 * 60 * 1000);
+
+		$(function() {
+			refreshMarker();
+
+			$("#radar_check").click(function() {
+				var check = $("#radar_check");
+				if (check.prop("checked")) {
+					radarOverlay.setMap(map);
+				} else {
+					radarOverlay.setMap(null);
+				}
+			});
+		});
+	
+	</script>
+	
+</head>
+<body>
+
+	<div class="container" id="hd">
+		
+	</div>
+	
+	<div class="container" id="nv">
+		
+		<ul>
+			<li><a href="/storm-blog/">Latest</a></li>
+			<li><a href="/storm-blog/2015.html">2015</a></li>
+			<li><a href="/storm-blog/2011.html">2011</a></li>
+			<li><a href="/storm-blog/2010.html">2010</a></li>
+			<li><a href="/storm-blog/2009.html">2009</a></li>
+			<li><a href="/storm-blog/2007.html">2007</a></li>
+			<li><a href="/storm-blog/2006.html">2006</a></li>			
+			<li><a href="/storm-blog/archive.html">Archive</a></li>
+			<!--<li><a href="/storm-blog/map.html">Live Map</a></li>-->
+			<li><a href="http://twitter.com/suckzone">Twitter</a></li>
+			<li><a href="/storm-blog/atom.xml">RSS</a></li>
+			<li><a href="/storm-blog/about.html">About</a></li>
+		</ul>
+		
+	</div>
+
+	<div class="container" id="notice">
+		<p>
+			<b>LIVE STREAMING</b> &ndash;
+			Download <a href="https://itunes.apple.com/app/id972909677">Periscope</a> and follow <a href="http://twitter.com/suckzone">@suckzone</a> to be notified when streams begin.
+		</p>
+	</div>
+	
+	<div class="container" id="map_info" style="display: none">
+		<div style="padding: 5px 20px; background-color: #333; color: #fff">
+			<div style="float: right">
+				Position updates every minute &ndash; 
+				<input type="checkbox" id="radar_check" checked="checked"><label for="radar_check" style="font-weight: normal">Radar overlay</label>
+			</div>
+			<b>LATEST POSITION</b> &ndash;
+			<span id="map_date"></span>
+		</div>
+	</div>
+
+	<div class="container" id="map" style="display: none">
+	
+	</div>
+	
+	
+	<div class="container" id="bd">
+		<div class="prepend-2 span-13 append-1">
+			
+			<h2>
+	<a class="invisible" href="">
+		May 22, 2009 &ndash; 
+		Off the Beaten Path: Nebraska sandhills and Kansas Cosmosphere
+	</a>
+</h2>
+
+
+
+<ul>
+	<li><strong>Trip meter:</strong> 548 miles (2581 miles total)</li>
+	<li><strong>Time:</strong> Two days</li>
+	<li><strong>From:</strong> North Platte, NE to Hutchinson, KS</li>
+	<li><strong>States:</strong> Nebraska, Kansas</li>
+	<li><strong>Summary:</strong> The Kansas Cosmosphere is amazing.</li>
+</ul>
+<p>I took the last two days off from chasing because there wasn&#8217;t significant severe weather potential, though there were some storms today in the same region they were on Wednesday, in western Nebraska. Just my luck. It&#8217;s okay, though. It would have been a pain to drive so far to Norman after that, and I wouldn&#8217;t have gotten to do a little exploring.</p>
+<h3>Nebraska National Forest</h3>
+<p>Thursday I drove up to the Nebraska National Forest and hiked around for a bit. The forest bills itself as the largest hand-planted forest in the world. It&#8217;s situated right in the middle of the sandhills, so I guess it would have to be! The weather was a cloudy and windy, but warm, and it was nice to get outside and hike around a bit after three straight days of driving.</p>
+<p>I have put up <a href="http://picasaweb.google.com/schrockwell/OBPSandhills?authkey=Gv1sRgCLuA6OuR6PHrAQ&amp;feat=directlink">a small photo gallery</a>.</p>
+<table style="width:auto;"><tr><td><a href="http://picasaweb.google.com/lh/photo/LSVKPrf_szml5z2aNmbrpg?authkey=Gv1sRgCLuA6OuR6PHrAQ&feat=embedwebsite"><img src="http://lh4.ggpht.com/_8Y30e9LNsno/ShdeEt6mhOI/AAAAAAAABUU/w0f-5NEfNaY/s400/Panorama%201.jpg" /></a></td><p></tr><tr><td style="font-family:arial,sans-serif; font-size:11px; text-align:right">From <a href="http://picasaweb.google.com/schrockwell/OBPSandhills?authkey=Gv1sRgCLuA6OuR6PHrAQ&feat=embedwebsite"><span class="caps">OBP</span> &#8211; Sandhills</a></td></tr></table></p>
+<h3>Kansas Cosmosphere and Space Center</h3>
+<p>When I got back last night I scouted out things to do today. I checked the Kansas tourism website and settled on the <a href="http://www.cosmo.org/">Kansas Cosmosphere and Space Center</a> in Hutchinson. It sounded kind of cool, and it was on the way to Norman, anyway.</p>
+<p>Wow! What a treat! The Cosmosphere is a museum that specializes in space artifacts. The Hall of Space walks you through the entire development of space travel: from the first experiments and the German V2 rockets, through the Cold War, and up to the Apollo missions. The artifacts they had there were amazing: an <a href="http://picasaweb.google.com/lh/photo/j_olcAL7T2CpqthvX5fCgg?authkey=Gv1sRgCK6gvJOHkuPw0wE&amp;feat=directlink">SR-71 Blackbird</a>, recovered Mercury and Apollo capsules (including the Liberty Bell 7, which was only recovered from the ocean in 1999), the USSR&#8217;s <a href="http://picasaweb.google.com/lh/photo/XxCAIwdQiN2LyuOFa0EIMA?authkey=Gv1sRgCK6gvJOHkuPw0wE&amp;feat=directlink">backup Sputnik</a>, a complete set of German V-1 and V-2 rockets, and so much more. Here is <a href="http://en.wikipedia.org/wiki/Kansas_Cosmosphere_and_Space_Center#Items_on_display">a list of artifacts on display</a>.</p>
+<table style="width:auto;"><tr><td><a href="http://picasaweb.google.com/lh/photo/XZ_hwzgN_A4_Tm2UGHSfQg?authkey=Gv1sRgCK6gvJOHkuPw0wE&feat=embedwebsite"><img src="http://lh3.ggpht.com/_8Y30e9LNsno/ShdgR26M3PI/AAAAAAAABV0/VdxAhOIkbV8/s400/DSC_1263.JPG" /></a></td><p></tr><tr><td style="font-family:arial,sans-serif; font-size:11px; text-align:right">From <a href="http://picasaweb.google.com/schrockwell/OBPCosmosphere?authkey=Gv1sRgCK6gvJOHkuPw0wE&feat=embedwebsite"><span class="caps">OBP</span> &#8211; Cosmosphere</a></td></tr></table></p>
+<p>Be sure to see <a href="http://picasaweb.google.com/schrockwell/OBPCosmosphere?authkey=Gv1sRgCK6gvJOHkuPw0wE&amp;feat=directlink">the full photo gallery</a>.</p>
+<p>This museum is a gem in the middle of nowhere. I went on a Friday evening and it was empty. Completely empty. For anyone with even a passing interest in aeronautics or space exploration, I can&#8217;t recommend it enough.</p>
+<p>I have a really fun stop planned for tomorrow. You&#8217;ll never guess what it is. Never, ever, ever!</p>
+
+<div style="margin: 3em 0; border-bottom: 1px solid #CCCCCC"></div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript" src="http://disqus.com/forums/suckzone/embed.js"></script>
+<noscript><a href="http://suckzone.disqus.com/?url=ref">View the discussion thread.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+			
+		</div>
+		<div class="span-6 append-2 last">
+			
+			<!-- <div id="map" style="width: 230px; height: 300px;"></div>
+			<p id="map_time"></p> -->
+			
+			<div id="twitter_div">
+				<a class="twitter-timeline" href="https://twitter.com/suckzone" data-widget-id="592428431297613824">Tweets by @suckzone</a>
+				<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+			</div>
+		</div>
+	</div>
+	
+	
+	<div class="container" id="ft">
+		All content &copy; 2015 <a href="http://rockwellschrock.com/">Rockwell Schrock</a>. 
+		Powered by <a href="http://jekyllrb.com/">Jekyll</a>.
+	</div>
+	
+</div>
+
+<!-- Disqus -->
+<script type="text/javascript">
+//<![CDATA[
+(function() {
+		var links = document.getElementsByTagName('a');
+		var query = '?';
+		for(var i = 0; i < links.length; i++) {
+			if(links[i].href.indexOf('#disqus_thread') >= 0) {
+				query += 'url' + i + '=' + encodeURIComponent(links[i].href) + '&';
+			}
+		}
+		document.write('<script charset="utf-8" type="text/javascript" src="http://disqus.com/forums/suckzone/get_num_replies.js' + query + '"></' + 'script>');
+	})();
+//]]>
+</script>
+
+<!-- Google Analytics -->
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-4760872-7");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</body>
+</html>

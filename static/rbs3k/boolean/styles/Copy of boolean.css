@@ -1,0 +1,149 @@
+* {
+	margin: 0px;
+	padding: 0px;
+	font-family: Arial, sans-serif;
+	font-weight: normal;
+	font-style: normal;
+}
+
+a { color: #0000FF; }
+a:active { color: #FF0000; }
+
+body, p, table {
+	font-size: 10pt;
+	line-height: 13pt;
+}
+
+p { margin: 13pt 0pt; }
+
+h1 { 
+	font-size: 18pt; 
+	margin-top: 13pt; 
+	text-align: center;
+}
+
+h2 { 
+	font-size: 10pt;
+	margin: 6pt 0pt 13pt 0px;
+	text-align: center;
+}
+
+h3 { 
+	font-size: 14pt; 
+}
+
+/**************************** ADSENSE ****************************/
+div.adsenseBanner {
+	display: block;
+	width: 468px;
+	height: 60px;
+	border: 1px solid black;
+}
+
+div.adsenseLinksBanner {
+	display: block;
+	width: 468px;
+	height: 15px;
+	border: 1px solid black;
+}
+
+div.adsenseLinksBannerWide {
+	display: block;
+	width: 728px;
+	height: 15px;
+	border: 1px solid black;
+}
+
+/**************************** LAYOUT ****************************/
+
+div#page {
+	width: 600px;
+	margin: auto;
+}
+
+/**************************** TABLES ****************************/
+
+table.content {
+	border: none;
+	margin: 0pt;
+}
+
+table.content td {
+	border: 0px;
+	padding: 13pt 0px;
+	vertical-align: top;
+	text-align: left;
+}
+
+table.content td h3 { margin-top: 0px; margin-bottom: 6pt; }
+table.content td p { margin-bottom: 0px; margin-top: 6pt; }
+
+table.content td.left { padding-right: 20px; width: 350px; }
+table.content td.right { padding-left: 20px; }
+
+/**************************** THE MACHINE ****************************/
+
+div#machine {
+
+}
+
+div #machineContent {
+	width: 450px;
+	height: 300px;
+	float: left;
+	text-align: center;
+	vertical-align: middle;
+	border-top: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+	border-right: 1px solid #000000;
+	background-color: #C3D9FF;
+	padding: 20px 0px;
+}
+
+div #machineContent p {
+	margin: 12pt 50px;
+	text-align: left;
+}
+
+ul#operators {
+	float: left;
+	display: block;
+	height: 292px;
+	border-right: 1px solid #000000;
+	padding-top: 50px;
+}
+
+ul#operators li {
+	list-style: none;
+	padding: 30px 10px;
+	margin-left: 20px;
+
+	width: 100px;
+	text-align: center;
+	vertical-align: middle;
+	font-size: 14pt;
+	cursor: pointer;
+	margin-right: -1px;
+	margin-top: -1px;
+	background-color: #E8EEF7;
+	border: 1px solid #000000;
+}
+
+ul#operators li:hover {
+	border-width: 3px;
+	border-right: 1px solid #C3D9FF;
+	background-color: #C3D9FF;
+	padding: 28px 10px 28px 28px;
+	margin-left: 0px;
+}
+
+ul#operators li.and:hover { color: #FF0000; }
+ul#operators li.or:hover { color: #FF7700; }
+ul#operators li.not:hover { color: #006633; }
+
+#andImage,
+#orImage,
+#notImage {
+	display: none;
+	visibility: hidden;
+}

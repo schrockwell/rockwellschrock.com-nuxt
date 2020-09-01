@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>The Suck Zone  &ndash; Day 1 Summary </title>
+	
+	<link rel="alternate" title="" type="application/atom+xml" href="/storm-blog/atom.xml">
+	
+	<link rel="stylesheet" href="/storm-blog/styles/blueprint/screen.css" type="text/css" media="screen, projection">
+	<link rel="stylesheet" href="/storm-blog/styles/blueprint/print.css" type="text/css" media="print">	
+	<!--[if IE]><link rel="stylesheet" href="/storm-blog/styles/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
+	
+	<link rel="stylesheet" href="/storm-blog/styles/main.css" type="text/css">
+	
+	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.0/jquery.min.js"></script>
+	
+	<script type="text/javascript">
+		var radarOverlay, map, mapDiv, marker;
+		
+		var refreshMarker = function() {
+			mapDiv = document.getElementById("map");
+			if (mapDiv == null) {
+				return;
+			}
+
+			$.get("/storm-blog/spotter_feed.cfm", function(data) {
+				var objects = data.split("End:");
+				var found = false;
+
+				for (var i = 0; i < objects.length; i++) {
+					var object = objects[i];
+					if (object.indexOf("Rockwell Schrock") > -1) {
+						var lines = object.split("\n");
+						var coords = lines[1].split(" ")[1].split(",");
+						var utcTime = lines[2].split("\\n")[1];
+						var date = new Date(Date.parse(utcTime));
+						
+						var now = new Date();
+						var minutesAgo = Math.round((now.getTime() - date.getTime()) / 60000);
+
+						var latlng = new google.maps.LatLng(coords[0], coords[1]);
+
+						if (map == null) {
+							map = new google.maps.Map(mapDiv, {
+								zoom: 8,
+								mapTypeId: google.maps.MapTypeId.ROADMAP
+							});
+
+							marker = new google.maps.Marker({
+								map: map
+							});
+						}
+
+						map.setCenter(latlng);
+						marker.setPosition(latlng);
+						
+						$("#map_date").text(minutesAgo + " " + (minutesAgo == 1 ? "minute" : "minutes") + " ago (" + utcTime + ")");
+						
+						found = true;
+						break;
+					}
+				}
+				
+				if (found) {
+					refreshRadarOverlay();
+					$("#map, #map_info").show();
+				} else {
+					$("#map, #map_info").hide();
+				}
+
+			});
+		};
+
+		var refreshRadarOverlay = function() {
+			var imageBounds = new google.maps.LatLngBounds(
+			    new google.maps.LatLng(21.652538062803, -127.620375523875420),
+			    new google.maps.LatLng(50.406626367301044,-66.517937876818));
+			
+			var oldMap = map;
+
+			if (radarOverlay != null) {
+				oldMap = radarOverlay.getMap();
+				radarOverlay.setMap(null)
+			};
+
+			radarOverlay = new google.maps.GroundOverlay("http://radar.weather.gov/ridge/Conus/RadarImg/latest_radaronly.gif", imageBounds, { opacity: 0.5, map: oldMap });
+		};
+
+
+		setInterval(refreshMarker, 1 * 60 * 1000);
+
+		$(function() {
+			refreshMarker();
+
+			$("#radar_check").click(function() {
+				var check = $("#radar_check");
+				if (check.prop("checked")) {
+					radarOverlay.setMap(map);
+				} else {
+					radarOverlay.setMap(null);
+				}
+			});
+		});
+	
+	</script>
+	
+</head>
+<body>
+
+	<div class="container" id="hd">
+		
+	</div>
+	
+	<div class="container" id="nv">
+		
+		<ul>
+			<li><a href="/storm-blog/">Latest</a></li>
+			<li><a href="/storm-blog/2015.html">2015</a></li>
+			<li><a href="/storm-blog/2011.html">2011</a></li>
+			<li><a href="/storm-blog/2010.html">2010</a></li>
+			<li><a href="/storm-blog/2009.html">2009</a></li>
+			<li><a href="/storm-blog/2007.html">2007</a></li>
+			<li><a href="/storm-blog/2006.html">2006</a></li>			
+			<li><a href="/storm-blog/archive.html">Archive</a></li>
+			<!--<li><a href="/storm-blog/map.html">Live Map</a></li>-->
+			<li><a href="http://twitter.com/suckzone">Twitter</a></li>
+			<li><a href="/storm-blog/atom.xml">RSS</a></li>
+			<li><a href="/storm-blog/about.html">About</a></li>
+		</ul>
+		
+	</div>
+
+	<div class="container" id="notice">
+		<p>
+			<b>LIVE STREAMING</b> &ndash;
+			Download <a href="https://itunes.apple.com/app/id972909677">Periscope</a> and follow <a href="http://twitter.com/suckzone">@suckzone</a> to be notified when streams begin.
+		</p>
+	</div>
+	
+	<div class="container" id="map_info" style="display: none">
+		<div style="padding: 5px 20px; background-color: #333; color: #fff">
+			<div style="float: right">
+				Position updates every minute &ndash; 
+				<input type="checkbox" id="radar_check" checked="checked"><label for="radar_check" style="font-weight: normal">Radar overlay</label>
+			</div>
+			<b>LATEST POSITION</b> &ndash;
+			<span id="map_date"></span>
+		</div>
+	</div>
+
+	<div class="container" id="map" style="display: none">
+	
+	</div>
+	
+	
+	<div class="container" id="bd">
+		<div class="prepend-2 span-13 append-1">
+			
+			<h2>
+	<a class="invisible" href="">
+		June 18, 2006 &ndash; 
+		Day 1 Summary
+	</a>
+</h2>
+
+
+
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/xM1dpPFuo30-urSjWYwqqQ?feat=directlink"><img src="http://lh5.ggpht.com/_8Y30e9LNsno/S9ZcjKlqTRI/AAAAAAAACUk/iVusdSZ85CM/s400/map.gif" alt="" /></a></p>
+<h3>Summary</h3>
+<ul>
+	<li><strong><a href="http://lh5.ggpht.com/_8Y30e9LNsno/S9ZcjKlqTRI/AAAAAAAACUk/iVusdSZ85CM/s800/map.gif">Route map</a></strong></li>
+	<li><strong><a href="http://picasaweb.google.com/schrockwell/StormChasing2006Day1?feat=directlink">Photo Gallery</a></strong></li>
+	<li><strong>Trip meter:</strong> 441 miles</li>
+	<li><strong>From:</strong> Denver, CO to Valentine, NE</li>
+	<li><strong>Summary:</strong> No severe storms :(</li>
+</ul>
+<h3>Long summary</h3>
+<p>Before this morning, today&#8217;s outlook for severe weather was less than ideal. We were originally intending today to be a relaxed travel day to get into position for tomorrow, but the situation had changed by morning. The <span class="caps">SPC</span> issued a slight risk area for central NE, which Roger agreed with and we subsequently went after. Dewpoints were great in the high 50s, but other factors did not fall into play.</p>
+<p>Radar showed a great boundary which formed a cumulus field early in the day, but this convergence quickly dissapated. The cumulus were completely gone by mid-afternoon. We briefly stopped at Merna, NE, at the intersection of routes 92 and 2, to assess the situation. We watched as a small cumulus cloud built up, then was quickly ripped to shreds by shear (see photos below). Roger then determined that Mother Nature was not going to deliver any storms today. We are now further north at a Holiday Inn Express in Valentine, NE, just south of the South Dakota border.</p>
+<p>The setup for tomorrow is much more ensured. We are leaving tomorrow at 8 AM to blast west into Montana, follow those storms east, and then cruise on back east so we can be in Iowa for initiation on Tuesday.</p>
+<h3>Realtime Summary</h3>
+<p>(Note the time zone change)</p>
+<ul>
+	<li>11:15 AM <span class="caps">MDT</span> &#8211; <embed autoplay="false" src="/storm-blog/audio/061806_1115_mdt.mp3" width="200" height="20"></li>
+	<li>1:33 PM <span class="caps">MDT</span> &#8211; Currently going E on I-76, 20 mi from NE. Watching an outflow boundary developing in central NE. Targetting North Platte for lunch and gas.</li>
+	<li>4:04 PM <span class="caps">CDT</span> &#8211; <embed autoplay="false" src="/storm-blog/audio/061806_1604_cdt.mp3" width="200" height="20"></li>
+	<li>5:23 PM <span class="caps">CDT</span> &#8211; Heading E on 92 towards a scattered cu. field. Beautiful country out here; a little hilly and lots of green. Cows (moo) and horses! So cool.</li>
+</ul>
+<h3>Final Thoughts</h3>
+<ul>
+	<li>Chasing is a blast.</li>
+	<li>It&#8217;s so flat!</li>
+	<li>Damn, daylight is really long here.</li>
+	<li>I can&#8217;t wait to see a storm; hope tomorrow is as good as it sounds.</li>
+	<li>Mooooooo!</li>
+</ul>
+<h3>Photos</h3>
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/OKiqxoEKt0Q_Oi4x03XxMw?feat=directlink"><img src="http://lh5.ggpht.com/_8Y30e9LNsno/RJ8PX6taABI/AAAAAAAAAMQ/VTlx9FXtCOU/s400/_dsc9930.jpg" alt="" /></a><br />
+<em>2:20 PM <span class="caps">MDT</span> &#8211; Observing a boundary early in the afternoon</em></p>
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/tUN67Uj_8Es61cBasa85sg?feat=directlink"><img src="http://lh4.ggpht.com/_8Y30e9LNsno/RJ8PY-cJABI/AAAAAAAAAMY/JQqw8iwJGnA/s400/_dsc9932.jpg" alt="" /></a><br />
+<em>4:15 PM <span class="caps">CDT</span> &#8211; Took a pic of the license plate at our North Platte break; you should see the expressions some drivers give us when they pass on the highway</em></p>
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/YkrBGi4GVBJ1E5bkroXKTw?feat=directlink"><img src="http://lh6.ggpht.com/_8Y30e9LNsno/RJ8PZ-EbABI/AAAAAAAAAMg/-APzRKWAegM/s400/_dsc9935.jpg" alt="" /></a><br />
+<em>4:16 PM <span class="caps">CDT</span> &#8211; Taking a break at North Platte</em></p>
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/TNQ0XYSoQsPEXI98r_aQvg?feat=directlink"><img src="http://lh5.ggpht.com/_8Y30e9LNsno/RJ8PaqwrABI/AAAAAAAAAMo/HP9KomIQDNg/s400/_dsc9938.jpg" alt="" /></a><br />
+<em>5:37 PM <span class="caps">CDT</span> &#8211; Watching some cumulus get ripped apart at Merna, NE</em></p>
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/TmbKX_mYKmj1JYrv1Pwsmw?feat=directlink"><img src="http://lh4.ggpht.com/_8Y30e9LNsno/RJ8PbfwPABI/AAAAAAAAAMw/26PIlzn5ZGw/s400/_dsc9941.jpg" alt="" /></a><br />
+<em>9:30 PM <span class="caps">CDT</span> &#8211; Observing a storm way off in the distance; yes, it is still light out at this time! Crazy.</em></p>
+
+<div style="margin: 3em 0; border-bottom: 1px solid #CCCCCC"></div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript" src="http://disqus.com/forums/suckzone/embed.js"></script>
+<noscript><a href="http://suckzone.disqus.com/?url=ref">View the discussion thread.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+			
+		</div>
+		<div class="span-6 append-2 last">
+			
+			<!-- <div id="map" style="width: 230px; height: 300px;"></div>
+			<p id="map_time"></p> -->
+			
+			<div id="twitter_div">
+				<a class="twitter-timeline" href="https://twitter.com/suckzone" data-widget-id="592428431297613824">Tweets by @suckzone</a>
+				<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+			</div>
+		</div>
+	</div>
+	
+	
+	<div class="container" id="ft">
+		All content &copy; 2015 <a href="http://rockwellschrock.com/">Rockwell Schrock</a>. 
+		Powered by <a href="http://jekyllrb.com/">Jekyll</a>.
+	</div>
+	
+</div>
+
+<!-- Disqus -->
+<script type="text/javascript">
+//<![CDATA[
+(function() {
+		var links = document.getElementsByTagName('a');
+		var query = '?';
+		for(var i = 0; i < links.length; i++) {
+			if(links[i].href.indexOf('#disqus_thread') >= 0) {
+				query += 'url' + i + '=' + encodeURIComponent(links[i].href) + '&';
+			}
+		}
+		document.write('<script charset="utf-8" type="text/javascript" src="http://disqus.com/forums/suckzone/get_num_replies.js' + query + '"></' + 'script>');
+	})();
+//]]>
+</script>
+
+<!-- Google Analytics -->
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-4760872-7");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</body>
+</html>

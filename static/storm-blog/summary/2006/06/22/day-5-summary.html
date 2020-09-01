@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>The Suck Zone  &ndash; Day 5 Summary </title>
+	
+	<link rel="alternate" title="" type="application/atom+xml" href="/storm-blog/atom.xml">
+	
+	<link rel="stylesheet" href="/storm-blog/styles/blueprint/screen.css" type="text/css" media="screen, projection">
+	<link rel="stylesheet" href="/storm-blog/styles/blueprint/print.css" type="text/css" media="print">	
+	<!--[if IE]><link rel="stylesheet" href="/storm-blog/styles/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
+	
+	<link rel="stylesheet" href="/storm-blog/styles/main.css" type="text/css">
+	
+	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.0/jquery.min.js"></script>
+	
+	<script type="text/javascript">
+		var radarOverlay, map, mapDiv, marker;
+		
+		var refreshMarker = function() {
+			mapDiv = document.getElementById("map");
+			if (mapDiv == null) {
+				return;
+			}
+
+			$.get("/storm-blog/spotter_feed.cfm", function(data) {
+				var objects = data.split("End:");
+				var found = false;
+
+				for (var i = 0; i < objects.length; i++) {
+					var object = objects[i];
+					if (object.indexOf("Rockwell Schrock") > -1) {
+						var lines = object.split("\n");
+						var coords = lines[1].split(" ")[1].split(",");
+						var utcTime = lines[2].split("\\n")[1];
+						var date = new Date(Date.parse(utcTime));
+						
+						var now = new Date();
+						var minutesAgo = Math.round((now.getTime() - date.getTime()) / 60000);
+
+						var latlng = new google.maps.LatLng(coords[0], coords[1]);
+
+						if (map == null) {
+							map = new google.maps.Map(mapDiv, {
+								zoom: 8,
+								mapTypeId: google.maps.MapTypeId.ROADMAP
+							});
+
+							marker = new google.maps.Marker({
+								map: map
+							});
+						}
+
+						map.setCenter(latlng);
+						marker.setPosition(latlng);
+						
+						$("#map_date").text(minutesAgo + " " + (minutesAgo == 1 ? "minute" : "minutes") + " ago (" + utcTime + ")");
+						
+						found = true;
+						break;
+					}
+				}
+				
+				if (found) {
+					refreshRadarOverlay();
+					$("#map, #map_info").show();
+				} else {
+					$("#map, #map_info").hide();
+				}
+
+			});
+		};
+
+		var refreshRadarOverlay = function() {
+			var imageBounds = new google.maps.LatLngBounds(
+			    new google.maps.LatLng(21.652538062803, -127.620375523875420),
+			    new google.maps.LatLng(50.406626367301044,-66.517937876818));
+			
+			var oldMap = map;
+
+			if (radarOverlay != null) {
+				oldMap = radarOverlay.getMap();
+				radarOverlay.setMap(null)
+			};
+
+			radarOverlay = new google.maps.GroundOverlay("http://radar.weather.gov/ridge/Conus/RadarImg/latest_radaronly.gif", imageBounds, { opacity: 0.5, map: oldMap });
+		};
+
+
+		setInterval(refreshMarker, 1 * 60 * 1000);
+
+		$(function() {
+			refreshMarker();
+
+			$("#radar_check").click(function() {
+				var check = $("#radar_check");
+				if (check.prop("checked")) {
+					radarOverlay.setMap(map);
+				} else {
+					radarOverlay.setMap(null);
+				}
+			});
+		});
+	
+	</script>
+	
+</head>
+<body>
+
+	<div class="container" id="hd">
+		
+	</div>
+	
+	<div class="container" id="nv">
+		
+		<ul>
+			<li><a href="/storm-blog/">Latest</a></li>
+			<li><a href="/storm-blog/2015.html">2015</a></li>
+			<li><a href="/storm-blog/2011.html">2011</a></li>
+			<li><a href="/storm-blog/2010.html">2010</a></li>
+			<li><a href="/storm-blog/2009.html">2009</a></li>
+			<li><a href="/storm-blog/2007.html">2007</a></li>
+			<li><a href="/storm-blog/2006.html">2006</a></li>			
+			<li><a href="/storm-blog/archive.html">Archive</a></li>
+			<!--<li><a href="/storm-blog/map.html">Live Map</a></li>-->
+			<li><a href="http://twitter.com/suckzone">Twitter</a></li>
+			<li><a href="/storm-blog/atom.xml">RSS</a></li>
+			<li><a href="/storm-blog/about.html">About</a></li>
+		</ul>
+		
+	</div>
+
+	<div class="container" id="notice">
+		<p>
+			<b>LIVE STREAMING</b> &ndash;
+			Download <a href="https://itunes.apple.com/app/id972909677">Periscope</a> and follow <a href="http://twitter.com/suckzone">@suckzone</a> to be notified when streams begin.
+		</p>
+	</div>
+	
+	<div class="container" id="map_info" style="display: none">
+		<div style="padding: 5px 20px; background-color: #333; color: #fff">
+			<div style="float: right">
+				Position updates every minute &ndash; 
+				<input type="checkbox" id="radar_check" checked="checked"><label for="radar_check" style="font-weight: normal">Radar overlay</label>
+			</div>
+			<b>LATEST POSITION</b> &ndash;
+			<span id="map_date"></span>
+		</div>
+	</div>
+
+	<div class="container" id="map" style="display: none">
+	
+	</div>
+	
+	
+	<div class="container" id="bd">
+		<div class="prepend-2 span-13 append-1">
+			
+			<h2>
+	<a class="invisible" href="">
+		June 22, 2006 &ndash; 
+		Day 5 Summary
+	</a>
+</h2>
+
+
+
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/QOI5NKys6YDutMXuGcfbDw?feat=directlink"><img src="http://lh3.ggpht.com/_8Y30e9LNsno/RJ8kBvGZABI/AAAAAAAAAR8/FbZY-oGJrfM/s400/_dsc0346.jpg" alt="" /></a></p>
+<h3>Summary</h3>
+<ul>
+	<li><strong><a href="http://picasaweb.google.com/schrockwell/StormChasing2006Day5?feat=directlink">Photo Gallery</a></strong></li>
+	<li><strong>Trip meter:</strong> 603 mi</li>
+	<li><strong>From:</strong> Great Bend, KS to Lamar, CO</li>
+	<li><strong>Summary:</strong> Got on several tornado-warned storms; was chased by an HP beast; core-punched a little bit</li>
+</ul>
+<h3>Long Summary</h3>
+<p>Today was another frustrating chase day of 2006, but we did as well as we could have done, given the situation. We did not miss anything major, since most of the &#8220;tornado&#8221; reports today were likely false. From everything we saw, the conditions were not in place at all for the formation of tornadoes. That being said, we did get to see some awesome gust-front action.</p>
+<p>We went west from Great Bend along I-70 and into Liman, Colorado. I forget exactly what happened here. I know we passed through Liman several times after that, traveling north to catch some cells that quickly died, and then we went back south on some tornado-warned cells that quickly gusted out and went linear.</p>
+<p>That was when the fun began. We ended up on the leading edge of a massive gust front. We stopped to photograph it for a bit, but as the hail core came up over the next hill, Roger yelled &#8220;We gotta go! We gotta&#8217; go now!&#8221; and oh how we went. We blasted ahead of the massive high-precipitation beast of a storm that was bright green in its center. That’s an indicator of large hail; Roger was very eager to stay in front of it after all the hail damage the van received last week. This thing was massive, and was bearing down on us quickly. Looking behind the van, the shelf cloud looked like a the mouth of a giant monster ready to eat the van.</p>
+<p>Out in front of this storm, the winds were gusting in a straight line almost at the speed of the van. Those were straight-line winds of fifty, maybe even sixty or seventy miles per hour! We were racing along with the wind to our back, and blowing dust decreased the visibility to zero at some points. We also saw many, many gustnadoes. Cows, too.</p>
+<p>We went further south, out of the path of all that garbage, to intercept another line of garbage. An embedded meso in the line gave the storm a tornado warning, with first indications being the tornado was spotted on the ground. We core-punched that storm through heavy rain, wind, and some hail, and drove right underneath the rotating mesocyclone. Short of being on a roller coaster, I didn&#8217;t previously think there was any other way to get such an adrenaline rush while sitting down.</p>
+<p>Eventually the tornado warning was dropped. We went south and then east through a squall line twice, but turned around the second time when all chances for a tornado had gone to zero (not that there was any chance to begin with).</p>
+<p>For all the crappy storms out there today, I think we did quite well. The pictures definitely confirm that.</p>
+<h3>Final Thoughts</h3>
+<ul>
+	<li>&#8220;What a beast!&#8221;</li>
+</ul>
+<h3>Audio</h3>
+<ul>
+	<li>12:01 PM &#8211; <embed autoplay="false" src="/storm-blog/audio/062206_1201.mp3" width="200" height="20"></li>
+	<li>3:06 PM &#8211; <embed autoplay="false" src="/storm-blog/audio/062206_1506.mp3" width="200" height="20"></li>
+	<li>3:42 PM &#8211; <embed autoplay="false" src="/storm-blog/audio/062206_1542.mp3" width="200" height="20"></li>
+	<li>3:58 PM &#8211; <embed autoplay="false" src="/storm-blog/audio/062206_1558.mp3" width="200" height="20"></li>
+	<li>5:03 PM &#8211; <embed autoplay="false" src="/storm-blog/audio/062206_1703.mp3" width="200" height="20"></li>
+</ul>
+<h3>Photos</h3>
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/1Vg7Vov9Z-wFBvELmzmxrA?feat=directlink"><img src="http://lh5.ggpht.com/_8Y30e9LNsno/RJ8onwpKABI/AAAAAAAAAT4/SZYMCCGKYXM/s400/_dsc0458.jpg" alt="" /></a><br />
+<em>This is a suspicious lowering we spotted in a storm early on.</em></p>
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/x734wNi26sG9eNqBxyvOdw?feat=directlink"><img src="http://lh3.ggpht.com/_8Y30e9LNsno/RJ8opYaCABI/AAAAAAAAAUg/BrHvhj4wf58/s400/_dsc0476.jpg" alt="" /></a><br />
+<em>This is the first good view we got of this massive storm. It has already taken on a shelf cloud and a gusted-out appearance.</em></p>
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/tEZSqN6gY0wDv6X5Tpd9ow?feat=directlink"><img src="http://lh6.ggpht.com/_8Y30e9LNsno/RJ8oqcINABI/AAAAAAAAAU4/mh63A2_eV1c/s400/_dsc0502.jpg" alt="" /></a><br />
+<em>Soon it started bearing down on us. Notice all the bluish-green under that thing? Hail, hail, and more hail.</em></p>
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/fkG0dkF84uTTHfzjh4dacg?feat=directlink"><img src="http://lh5.ggpht.com/_8Y30e9LNsno/RJ8osfBkABI/AAAAAAAAAVo/HdDMLWf1Eqw/s400/_dsc0544.jpg" alt="" /></a><br />
+<em>This is a huge gustnado that kicked up tons of dust when it died.</em></p>
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/tvE8ti-jRoy2npa16Sxtbg?feat=directlink"><img src="http://lh3.ggpht.com/_8Y30e9LNsno/RJ8ospHNABI/AAAAAAAAAVw/krGEPx918cU/s400/_dsc0556.jpg" alt="" /></a><br />
+<em>There was all kinds of vorticity along the gust front. The movement in the clouds here was tremendous, but it was nothing dangerous.</em></p>
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/DXWZNOKoYNB86xv4QVqrWw?feat=directlink"><img src="http://lh3.ggpht.com/_8Y30e9LNsno/RJ8otHCjABI/AAAAAAAAAV4/aSLHqs8-WmE/s400/_dsc0560.jpg" alt="" /></a><br />
+<em>Here&#8217;s one more look at this monster. Amazing structure.</em></p>
+
+<div style="margin: 3em 0; border-bottom: 1px solid #CCCCCC"></div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript" src="http://disqus.com/forums/suckzone/embed.js"></script>
+<noscript><a href="http://suckzone.disqus.com/?url=ref">View the discussion thread.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+			
+		</div>
+		<div class="span-6 append-2 last">
+			
+			<!-- <div id="map" style="width: 230px; height: 300px;"></div>
+			<p id="map_time"></p> -->
+			
+			<div id="twitter_div">
+				<a class="twitter-timeline" href="https://twitter.com/suckzone" data-widget-id="592428431297613824">Tweets by @suckzone</a>
+				<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+			</div>
+		</div>
+	</div>
+	
+	
+	<div class="container" id="ft">
+		All content &copy; 2015 <a href="http://rockwellschrock.com/">Rockwell Schrock</a>. 
+		Powered by <a href="http://jekyllrb.com/">Jekyll</a>.
+	</div>
+	
+</div>
+
+<!-- Disqus -->
+<script type="text/javascript">
+//<![CDATA[
+(function() {
+		var links = document.getElementsByTagName('a');
+		var query = '?';
+		for(var i = 0; i < links.length; i++) {
+			if(links[i].href.indexOf('#disqus_thread') >= 0) {
+				query += 'url' + i + '=' + encodeURIComponent(links[i].href) + '&';
+			}
+		}
+		document.write('<script charset="utf-8" type="text/javascript" src="http://disqus.com/forums/suckzone/get_num_replies.js' + query + '"></' + 'script>');
+	})();
+//]]>
+</script>
+
+<!-- Google Analytics -->
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-4760872-7");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</body>
+</html>

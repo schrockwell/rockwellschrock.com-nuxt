@@ -1,0 +1,146 @@
+* {
+	margin: 0px;
+	padding: 0px;
+	font-family: Arial, sans-serif;
+	font-weight: normal;
+	font-style: normal;
+}
+
+a { color: #0000CC; }
+a:active { color: #CC0000; }
+
+body, p, table {
+	font-size: 10pt;
+	line-height: 13pt;
+}
+
+p { margin: 13pt 0pt; }
+
+h1 { 
+	font-size: 20pt; 
+	margin-top: 13pt; 
+	text-align: center;
+}
+
+h2 { 
+	font-size: 10pt;
+	margin: 6pt 0pt 13pt 0px;
+	text-align: center;
+}
+
+h3 { 
+	font-size: 14pt; 
+}
+
+/**************************** ADSENSE ****************************/
+div.adsenseBanner {
+	display: block;
+	width: 468px;
+	height: 60px;
+	border: 1px solid black;
+}
+
+div.adsenseLinksBanner {
+	display: block;
+	width: 468px;
+	height: 15px;
+	border: 1px solid black;
+}
+
+div.adsenseLinksBannerWide {
+	display: block;
+	width: 728px;
+	height: 15px;
+	border: 1px solid black;
+}
+
+div.adsenseSkyscraper {
+	float: right;
+}
+
+/**************************** LAYOUT ****************************/
+
+div#page {
+	width: 750px;
+	margin: auto;
+}
+
+/**************************** TABLES ****************************/
+
+table.content {
+	border: none;
+	margin: 0 auto;
+	width: 600px;
+}
+
+table.content td {
+	border: 0px;
+	padding: 13pt 0px;
+	vertical-align: top;
+	text-align: left;
+}
+
+table.content td h3 { margin-top: 0px; margin-bottom: 6pt; }
+table.content td p { margin-bottom: 0px; margin-top: 6pt; }
+
+table.content td.left { padding-right: 20px; width: 300px; }
+table.content td.right { padding-left: 20px; }
+
+/**************************** THE MACHINE ****************************/
+
+div#machine {
+	margin: 0 auto;
+	width: 600px;
+}
+
+div #machineContent {
+	display: block;
+	width: 450px;
+	height: 310px;
+	padding: 20px 0px;
+	float: left;
+	
+	text-align: center;
+	vertical-align: middle;
+	
+	border: 1px solid #000000;
+	background-color: #C3D9FF;
+}
+
+div #machineContent p {
+	margin: 12pt 50px 0px 50px;
+	text-align: left;
+}
+
+ul#operators {
+	float: left;
+	display: block;
+	height: 292px;
+	padding-top: 35px;
+	margin-right: 15px;
+}
+
+ul#operators li {
+	list-style: none;
+	padding: 30px 10px;
+
+	width: 100px;
+	text-align: center;
+	vertical-align: middle;
+	font-size: 14pt;
+	cursor: pointer;
+	
+	margin-bottom: 20px;
+	
+	background-color: #E8EEF7;
+	border: 1px solid #000000;
+}
+
+ul#operators .andHover { background-color: #FF3300; color: #FFFFFF; }
+ul#operators .orHover { background-color: #FFCC00; }
+ul#operators .notHover { background-color: #006633; color: #FFFFFF; }
+
+#andImage, #orImage, #notImage {
+	display: none;
+	visibility: hidden;
+}

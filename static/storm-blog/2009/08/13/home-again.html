@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>The Suck Zone  &ndash; Home again </title>
+	
+	<link rel="alternate" title="" type="application/atom+xml" href="/storm-blog/atom.xml">
+	
+	<link rel="stylesheet" href="/storm-blog/styles/blueprint/screen.css" type="text/css" media="screen, projection">
+	<link rel="stylesheet" href="/storm-blog/styles/blueprint/print.css" type="text/css" media="print">	
+	<!--[if IE]><link rel="stylesheet" href="/storm-blog/styles/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
+	
+	<link rel="stylesheet" href="/storm-blog/styles/main.css" type="text/css">
+	
+	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.0/jquery.min.js"></script>
+	
+	<script type="text/javascript">
+		var radarOverlay, map, mapDiv, marker;
+		
+		var refreshMarker = function() {
+			mapDiv = document.getElementById("map");
+			if (mapDiv == null) {
+				return;
+			}
+
+			$.get("/storm-blog/spotter_feed.cfm", function(data) {
+				var objects = data.split("End:");
+				var found = false;
+
+				for (var i = 0; i < objects.length; i++) {
+					var object = objects[i];
+					if (object.indexOf("Rockwell Schrock") > -1) {
+						var lines = object.split("\n");
+						var coords = lines[1].split(" ")[1].split(",");
+						var utcTime = lines[2].split("\\n")[1];
+						var date = new Date(Date.parse(utcTime));
+						
+						var now = new Date();
+						var minutesAgo = Math.round((now.getTime() - date.getTime()) / 60000);
+
+						var latlng = new google.maps.LatLng(coords[0], coords[1]);
+
+						if (map == null) {
+							map = new google.maps.Map(mapDiv, {
+								zoom: 8,
+								mapTypeId: google.maps.MapTypeId.ROADMAP
+							});
+
+							marker = new google.maps.Marker({
+								map: map
+							});
+						}
+
+						map.setCenter(latlng);
+						marker.setPosition(latlng);
+						
+						$("#map_date").text(minutesAgo + " " + (minutesAgo == 1 ? "minute" : "minutes") + " ago (" + utcTime + ")");
+						
+						found = true;
+						break;
+					}
+				}
+				
+				if (found) {
+					refreshRadarOverlay();
+					$("#map, #map_info").show();
+				} else {
+					$("#map, #map_info").hide();
+				}
+
+			});
+		};
+
+		var refreshRadarOverlay = function() {
+			var imageBounds = new google.maps.LatLngBounds(
+			    new google.maps.LatLng(21.652538062803, -127.620375523875420),
+			    new google.maps.LatLng(50.406626367301044,-66.517937876818));
+			
+			var oldMap = map;
+
+			if (radarOverlay != null) {
+				oldMap = radarOverlay.getMap();
+				radarOverlay.setMap(null)
+			};
+
+			radarOverlay = new google.maps.GroundOverlay("http://radar.weather.gov/ridge/Conus/RadarImg/latest_radaronly.gif", imageBounds, { opacity: 0.5, map: oldMap });
+		};
+
+
+		setInterval(refreshMarker, 1 * 60 * 1000);
+
+		$(function() {
+			refreshMarker();
+
+			$("#radar_check").click(function() {
+				var check = $("#radar_check");
+				if (check.prop("checked")) {
+					radarOverlay.setMap(map);
+				} else {
+					radarOverlay.setMap(null);
+				}
+			});
+		});
+	
+	</script>
+	
+</head>
+<body>
+
+	<div class="container" id="hd">
+		
+	</div>
+	
+	<div class="container" id="nv">
+		
+		<ul>
+			<li><a href="/storm-blog/">Latest</a></li>
+			<li><a href="/storm-blog/2015.html">2015</a></li>
+			<li><a href="/storm-blog/2011.html">2011</a></li>
+			<li><a href="/storm-blog/2010.html">2010</a></li>
+			<li><a href="/storm-blog/2009.html">2009</a></li>
+			<li><a href="/storm-blog/2007.html">2007</a></li>
+			<li><a href="/storm-blog/2006.html">2006</a></li>			
+			<li><a href="/storm-blog/archive.html">Archive</a></li>
+			<!--<li><a href="/storm-blog/map.html">Live Map</a></li>-->
+			<li><a href="http://twitter.com/suckzone">Twitter</a></li>
+			<li><a href="/storm-blog/atom.xml">RSS</a></li>
+			<li><a href="/storm-blog/about.html">About</a></li>
+		</ul>
+		
+	</div>
+
+	<div class="container" id="notice">
+		<p>
+			<b>LIVE STREAMING</b> &ndash;
+			Download <a href="https://itunes.apple.com/app/id972909677">Periscope</a> and follow <a href="http://twitter.com/suckzone">@suckzone</a> to be notified when streams begin.
+		</p>
+	</div>
+	
+	<div class="container" id="map_info" style="display: none">
+		<div style="padding: 5px 20px; background-color: #333; color: #fff">
+			<div style="float: right">
+				Position updates every minute &ndash; 
+				<input type="checkbox" id="radar_check" checked="checked"><label for="radar_check" style="font-weight: normal">Radar overlay</label>
+			</div>
+			<b>LATEST POSITION</b> &ndash;
+			<span id="map_date"></span>
+		</div>
+	</div>
+
+	<div class="container" id="map" style="display: none">
+	
+	</div>
+	
+	
+	<div class="container" id="bd">
+		<div class="prepend-2 span-13 append-1">
+			
+			<h2>
+	<a class="invisible" href="">
+		August 13, 2009 &ndash; 
+		Home again
+	</a>
+</h2>
+
+
+
+<p><a href="http://picasaweb.google.com/lh/photo/pDKi5x_NqhW9ly0TOBwUHw?feat=directlink"><img src="http://lh5.ggpht.com/_8Y30e9LNsno/SoRwUFV8IsI/AAAAAAAAB9k/PWmq2SNdKLo/s400/Hollings%20Internship.jpg" alt="" /></a></p>
+<p><a href="http://picasaweb.google.com/schrockwell/HollingsInternship?feat=directlink">See the photo gallery</a></p>
+<h3>Housekeeping</h3>
+<p>I just finished and posted <a href="/storm-blog/summary/2009/06/05/wrecked.html">an old chase summary from June 5</a>, the day I totaled my car. It&#8217;s a long entry, as you might expect.</p>
+<p>I also wrote <a href="/storm-blog/summary/2009/06/12/norman-tornado.html">an entry for the infamous June 12 Norman tornado</a>.</p>
+<h3>My project</h3>
+<p>My summer project was a huge success and it came out really well. The final product was an eight-minute presentation for Science on a Sphere, titled <em>Cooking Up A Storm</em>. It walks the audience through the atmospheric setup for a typical severe weather day.</p>
+<p>I showed it to a few tour groups and to my peers, and it was received very well.</p>
+<p>You can view <a href="http://vimeo.com/5911007">a rendering of the video</a> or <a href="http://vimeo.com/6039871">how it appears on the sphere</a>. There is more information and a download on <a href="http://sos.noaa.gov/datasets/extras/nssl_storm.html">the <span class="caps">SOS</span> site</a>.</p>
+<h3>End of the internship</h3>
+<p>After all the excitement of chase season, my internship ended uneventfully enough. I spent a lot of time with my newfound friends. To begin a typical evening, we would all come back to the apartments and fix ourselves dinner. Then we would get together at dusk and play volleyball or basketball until we were exhausted. Then we&#8217;d take showers and all get together to watch DVDs of <em>The Office</em>. It was a fun routine.</p>
+<p>We did a lot of fun things on weekends too. We went to Oklahoma City for the Fourth of July weekend to go to <a href="http://www.whitewaterbay.com/">White Water Bay</a> and see fireworks. We played laser tag at <a href="http://www.heydayfamilyfun.com/">HeyDay</a>, and went to see the <a href="http://www.oklahomaredhawks.com/">Oklahoma City RedHawks</a>, a minor-league baseball team. There was also the midnight showing of <em><a href="http://www.imdb.com/title/tt0417741/">Harry Potter and the Half-Blood Prince</a></em>. Oh yeah, and my mom visited as well and brought me a car so I could drive home. I love you, Mom.</p>
+<h3>Silver Spring</h3>
+<p>The final week of my internship was spent at <span class="caps">NOAA</span> headquarters in Silver Spring, MD. I drove there in three days, simultaneously enjoying the beautiful scenery of the southeast and cursing Tennessee drivers.</p>
+<p>Presentation week went really well. The presentations dragged on and on, but that was expected. I met up with a lot of people I&#8217;d met during orientation week a year and a half earlier. We went into D.C. twice to sightsee and to nosh on some <a href="http://www.legalseafoods.com/">Legal Sea Food</a>.</p>
+<h3>Thanks</h3>
+<p>Where to begin? Thank you first to Daphne Thompson for being a great first-time mentor and for lending her melodious voice for the narration of my <span class="caps">SOS</span> video. Thank you also to Keli Tarp for organizing the Hollings program in Norman for all eight of us; she did a bang-up job. Thank you also to the folks from the <span class="caps">NSSL</span> IT department, especially James Murnan for helping me with the video production and sound effect stuff. Finally, thank you to NOAA&#8217;s Ernest F. Hollings scholarship program and all its organizers, like Pai Moua and Chantell Haskins. This was a great opportunity and learning experience.</p>
+<p>I wish the best of luck to all my friends and peers! In no particular order: Darren, T-mas, Justin, Stephanie, Madison, Liz, Kristen, Hannah, Lauren, Travis, Astrid, Doug, Jeff, Preson, Alex, Jonathan, Lindsey &#8211; you are all great.</p>
+<p>I wouldn&#8217;t trade this summer for any other.</p>
+<h3>Where to go from here?</h3>
+<p>Senior year begins in two weeks, and I will have to get back into that routine again. I may post some more pictures or videos as I go through and process them. Hopefully some tropical storms spin our way so I will be able to blog about that! Then comes the fun winter weather and the infamous Storrs Wind Vortex To Hell. In the meantime, the blog will only be updated intermittently.</p>
+<p>Thank you for reading!</p>
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/NbM5NBaGJGhOmZegh87ZKA?feat=directlink"><img src="http://lh3.ggpht.com/_8Y30e9LNsno/SoRuT53PQiI/AAAAAAAAB84/7HQck6z7dMc/s400/DSC_2586.JPG" alt="" /></a></p>
+
+<div style="margin: 3em 0; border-bottom: 1px solid #CCCCCC"></div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript" src="http://disqus.com/forums/suckzone/embed.js"></script>
+<noscript><a href="http://suckzone.disqus.com/?url=ref">View the discussion thread.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+			
+		</div>
+		<div class="span-6 append-2 last">
+			
+			<!-- <div id="map" style="width: 230px; height: 300px;"></div>
+			<p id="map_time"></p> -->
+			
+			<div id="twitter_div">
+				<a class="twitter-timeline" href="https://twitter.com/suckzone" data-widget-id="592428431297613824">Tweets by @suckzone</a>
+				<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+			</div>
+		</div>
+	</div>
+	
+	
+	<div class="container" id="ft">
+		All content &copy; 2015 <a href="http://rockwellschrock.com/">Rockwell Schrock</a>. 
+		Powered by <a href="http://jekyllrb.com/">Jekyll</a>.
+	</div>
+	
+</div>
+
+<!-- Disqus -->
+<script type="text/javascript">
+//<![CDATA[
+(function() {
+		var links = document.getElementsByTagName('a');
+		var query = '?';
+		for(var i = 0; i < links.length; i++) {
+			if(links[i].href.indexOf('#disqus_thread') >= 0) {
+				query += 'url' + i + '=' + encodeURIComponent(links[i].href) + '&';
+			}
+		}
+		document.write('<script charset="utf-8" type="text/javascript" src="http://disqus.com/forums/suckzone/get_num_replies.js' + query + '"></' + 'script>');
+	})();
+//]]>
+</script>
+
+<!-- Google Analytics -->
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-4760872-7");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</body>
+</html>

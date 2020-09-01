@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>The Suck Zone  &ndash; Turkey Day </title>
+	
+	<link rel="alternate" title="" type="application/atom+xml" href="/storm-blog/atom.xml">
+	
+	<link rel="stylesheet" href="/storm-blog/styles/blueprint/screen.css" type="text/css" media="screen, projection">
+	<link rel="stylesheet" href="/storm-blog/styles/blueprint/print.css" type="text/css" media="print">	
+	<!--[if IE]><link rel="stylesheet" href="/storm-blog/styles/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
+	
+	<link rel="stylesheet" href="/storm-blog/styles/main.css" type="text/css">
+	
+	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.0/jquery.min.js"></script>
+	
+	<script type="text/javascript">
+		var radarOverlay, map, mapDiv, marker;
+		
+		var refreshMarker = function() {
+			mapDiv = document.getElementById("map");
+			if (mapDiv == null) {
+				return;
+			}
+
+			$.get("/storm-blog/spotter_feed.cfm", function(data) {
+				var objects = data.split("End:");
+				var found = false;
+
+				for (var i = 0; i < objects.length; i++) {
+					var object = objects[i];
+					if (object.indexOf("Rockwell Schrock") > -1) {
+						var lines = object.split("\n");
+						var coords = lines[1].split(" ")[1].split(",");
+						var utcTime = lines[2].split("\\n")[1];
+						var date = new Date(Date.parse(utcTime));
+						
+						var now = new Date();
+						var minutesAgo = Math.round((now.getTime() - date.getTime()) / 60000);
+
+						var latlng = new google.maps.LatLng(coords[0], coords[1]);
+
+						if (map == null) {
+							map = new google.maps.Map(mapDiv, {
+								zoom: 8,
+								mapTypeId: google.maps.MapTypeId.ROADMAP
+							});
+
+							marker = new google.maps.Marker({
+								map: map
+							});
+						}
+
+						map.setCenter(latlng);
+						marker.setPosition(latlng);
+						
+						$("#map_date").text(minutesAgo + " " + (minutesAgo == 1 ? "minute" : "minutes") + " ago (" + utcTime + ")");
+						
+						found = true;
+						break;
+					}
+				}
+				
+				if (found) {
+					refreshRadarOverlay();
+					$("#map, #map_info").show();
+				} else {
+					$("#map, #map_info").hide();
+				}
+
+			});
+		};
+
+		var refreshRadarOverlay = function() {
+			var imageBounds = new google.maps.LatLngBounds(
+			    new google.maps.LatLng(21.652538062803, -127.620375523875420),
+			    new google.maps.LatLng(50.406626367301044,-66.517937876818));
+			
+			var oldMap = map;
+
+			if (radarOverlay != null) {
+				oldMap = radarOverlay.getMap();
+				radarOverlay.setMap(null)
+			};
+
+			radarOverlay = new google.maps.GroundOverlay("http://radar.weather.gov/ridge/Conus/RadarImg/latest_radaronly.gif", imageBounds, { opacity: 0.5, map: oldMap });
+		};
+
+
+		setInterval(refreshMarker, 1 * 60 * 1000);
+
+		$(function() {
+			refreshMarker();
+
+			$("#radar_check").click(function() {
+				var check = $("#radar_check");
+				if (check.prop("checked")) {
+					radarOverlay.setMap(map);
+				} else {
+					radarOverlay.setMap(null);
+				}
+			});
+		});
+	
+	</script>
+	
+</head>
+<body>
+
+	<div class="container" id="hd">
+		
+	</div>
+	
+	<div class="container" id="nv">
+		
+		<ul>
+			<li><a href="/storm-blog/">Latest</a></li>
+			<li><a href="/storm-blog/2015.html">2015</a></li>
+			<li><a href="/storm-blog/2011.html">2011</a></li>
+			<li><a href="/storm-blog/2010.html">2010</a></li>
+			<li><a href="/storm-blog/2009.html">2009</a></li>
+			<li><a href="/storm-blog/2007.html">2007</a></li>
+			<li><a href="/storm-blog/2006.html">2006</a></li>			
+			<li><a href="/storm-blog/archive.html">Archive</a></li>
+			<!--<li><a href="/storm-blog/map.html">Live Map</a></li>-->
+			<li><a href="http://twitter.com/suckzone">Twitter</a></li>
+			<li><a href="/storm-blog/atom.xml">RSS</a></li>
+			<li><a href="/storm-blog/about.html">About</a></li>
+		</ul>
+		
+	</div>
+
+	<div class="container" id="notice">
+		<p>
+			<b>LIVE STREAMING</b> &ndash;
+			Download <a href="https://itunes.apple.com/app/id972909677">Periscope</a> and follow <a href="http://twitter.com/suckzone">@suckzone</a> to be notified when streams begin.
+		</p>
+	</div>
+	
+	<div class="container" id="map_info" style="display: none">
+		<div style="padding: 5px 20px; background-color: #333; color: #fff">
+			<div style="float: right">
+				Position updates every minute &ndash; 
+				<input type="checkbox" id="radar_check" checked="checked"><label for="radar_check" style="font-weight: normal">Radar overlay</label>
+			</div>
+			<b>LATEST POSITION</b> &ndash;
+			<span id="map_date"></span>
+		</div>
+	</div>
+
+	<div class="container" id="map" style="display: none">
+	
+	</div>
+	
+	
+	<div class="container" id="bd">
+		<div class="prepend-2 span-13 append-1">
+			
+			<h2>
+	<a class="invisible" href="">
+		June 13, 2009 &ndash; 
+		Turkey Day
+	</a>
+</h2>
+
+
+
+<p><a href="http://picasaweb.google.com/schrockwell/June132009TurkeyDay?feat=directlink"><img src="http://lh5.ggpht.com/_8Y30e9LNsno/SjSvO2ExjOI/AAAAAAAABs0/2Ld9gWoe-RQ/s400/June%2013%2C%202009%20-%20Turkey%20Day.jpg" alt="" /></a></p>
+<p><a href="http://picasaweb.google.com/schrockwell/June132009TurkeyDay?feat=directlink">See the photo gallery</a></p>
+<h3>Summary</h3>
+<ul>
+	<li><strong><a href="http://maps.google.com/maps/ms?ie=UTF8&amp;hl=en&amp;msa=0&amp;ll=34.908458,-98.85498&amp;spn=2.189247,4.943848&amp;z=8&amp;msid=106942326439865455629.00046c49109ed99e4fe6f">Route map</a></strong></li>
+	<li><strong><a href="http://picasaweb.google.com/schrockwell/June132009TurkeyDay?feat=directlink">Photo gallery</a></strong></li>
+	<li><strong>Trip meter:</strong> about 550 miles</li>
+	<li><strong>Time:</strong> 11 hours</li>
+	<li><strong>From:</strong> Norman, OK, to Turkey, TX, and back to Norman</li>
+	<li><strong>States:</strong> Oklahoma, Texas</li>
+	<li><strong>Summary:</strong> This was my first Texas chase! Though we were all turkeys today in Turkey, TX.</li>
+</ul>
+<h3>The set-up</h3>
+<p>Today was a moderate risk. I didn&#8217;t really have time to analyze why, because I got up at 1 PM and basically headed straight out the door. There was supposed to be some action with a strengthening low-level jet, along with temps near 100 and high dewpoints to match. The cap was strong, but with strong surface heating it was to give way later in the afternoon into evening.</p>
+<p>Our trip with two people in one car quickly morphed into a seven-person, two-car trip.</p>
+<p>Misery loves company!</p>
+<h3>The chase</h3>
+<p>South, or west? That&#8217;s always the big question when we&#8217;re headed out of Norman towards the dryline. Today, we decided west. Then south. Then west again.</p>
+<p>We started out west on I-40, but thought that warmer, more sheared air would be to the south, below the warm front. The front was clearly visible cutting east/west directly through the Frederick, OK radar that morning. Or maybe it was the Enid radar. Not sure.</p>
+<p>We drove south on route 183, initially trying to get in front of a monster, tornado-warned cell that looked great on radar. It was just too far away, though. By approaching it from the north, we would have had to core-punch through the storm&#8217;s precipitation core, which almost certainly included severe hail. Too little, too late.</p>
+<p>So we went west on route 62, toward the dryline. We targeted a developing cell near Turkey, TX that had some decent rotation and nice structure. We couldn&#8217;t see much out our windows because the anvil blow-off from the previously-mentioned storm was blocking out the light to everything below. It was all just a big, hazy, socked-in mess.</p>
+<p>The storm was roughly east of Turkey. It was trekking <span class="caps">ENE</span> but then turned right and tracked more <span class="caps">ESE</span>, crossing our path. It was a race to the finish as we drove SW on 86, trying to get to Turkey to cut in front of the storm and get on its south side. We saw on the computer that there were many other chasers already on this storm, and Cloud 9 Tours reported a brief rope tornado with this cell.</p>
+<p>Well, as our luck would have it, the storm petered out and we were left in Turkey with pouring rain and crushed dreams. We didn&#8217;t get to see much of anything.</p>
+<h3>But things get a little better</h3>
+<p>At the Turkey gas station, we stood outside and discussed our next move. Then, out of the minivan parked two cars down, my <span class="caps">NOAA</span> mentor Daphne Thompson emerges! She was chasing with her husband Rich, a Storm Prediction Center (<span class="caps">SPC</span>) forecaster, and her sons. She knows everyone who was there because she helps run the Hollings program here in Norman. They had beat us to the storm, but had only seen a wall cloud, nothing more.</p>
+<p>And you know what? They had driven from Norman, too. They have years and years of storm chasing experience and real-world operational forecasting. And we were in <em>the same town</em> at <em>the same time</em>.</p>
+<p>I don&#8217;t care that we busted this chase. We still must have done something right.</p>
+<h3>Then the fun begins</h3>
+<p>On our drive back, the sky was perfectly clear to the northwest, where the sun was setting, and the remains of our storm tracked along to the southeast. The result was a brilliant, full rainbow that we got to watch for a half hour as we drove back on 86.</p>
+<p>We stopped to take some pictures of the rainbow. When we climbed back into the car, the song <em>I Can See Clearly Now</em> was playing on the radio. The lyrics? &#8220;Here is the rainbow I&#8217;ve been waiting for / It&#8217;s gonna&#8217; be a bright, bright, bright sun-shiny day.&#8221; How perfect is that?</p>
+<p>Anyway, we then caught up with some other cell along 62, west of Altus. It was running south of us, parallel to the road at a high speed, so we could have been it for a long time. It initially had a high <span class="caps">VIL</span> reading, which means it probably produced some larger hail, but this one did not last long and we only experienced some rain and gusty winds as we poked through it. It was darker now, and the lightning was continuous and all around us. It really was a sight.</p>
+<p>We stopped at Mickey D&#8217;s in Altus, OK for some fine dining, then went straight back to Norman. We got back around 1 AM.</p>
+<p>Tired.</p>
+<p>Frustrated.</p>
+<p>But still feeling that today wasn&#8217;t as bad as it seemed.</p>
+
+<div style="margin: 3em 0; border-bottom: 1px solid #CCCCCC"></div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript" src="http://disqus.com/forums/suckzone/embed.js"></script>
+<noscript><a href="http://suckzone.disqus.com/?url=ref">View the discussion thread.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+			
+		</div>
+		<div class="span-6 append-2 last">
+			
+			<!-- <div id="map" style="width: 230px; height: 300px;"></div>
+			<p id="map_time"></p> -->
+			
+			<div id="twitter_div">
+				<a class="twitter-timeline" href="https://twitter.com/suckzone" data-widget-id="592428431297613824">Tweets by @suckzone</a>
+				<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+			</div>
+		</div>
+	</div>
+	
+	
+	<div class="container" id="ft">
+		All content &copy; 2015 <a href="http://rockwellschrock.com/">Rockwell Schrock</a>. 
+		Powered by <a href="http://jekyllrb.com/">Jekyll</a>.
+	</div>
+	
+</div>
+
+<!-- Disqus -->
+<script type="text/javascript">
+//<![CDATA[
+(function() {
+		var links = document.getElementsByTagName('a');
+		var query = '?';
+		for(var i = 0; i < links.length; i++) {
+			if(links[i].href.indexOf('#disqus_thread') >= 0) {
+				query += 'url' + i + '=' + encodeURIComponent(links[i].href) + '&';
+			}
+		}
+		document.write('<script charset="utf-8" type="text/javascript" src="http://disqus.com/forums/suckzone/get_num_replies.js' + query + '"></' + 'script>');
+	})();
+//]]>
+</script>
+
+<!-- Google Analytics -->
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-4760872-7");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</body>
+</html>

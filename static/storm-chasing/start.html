@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<title>Chasing Start Page</title>
+	</head>
+	
+	<style>
+		body {
+			font-family: "Helvetica Neue", Arial, sans-serif;
+			font-size: 70%;
+			color: #333333;
+		}
+		
+		div.col {
+			float: left;
+		}
+		
+		h1 {
+			text-transform: uppercase;
+			font-size: 3em;
+			margin: 0 0 0.5em 0;
+		}
+		
+		ul.src {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+		}
+
+		ul.src li {
+			font-size: 3em;
+		}
+		
+		li.padded {
+			padding: 0.2em 0.5em;
+		}
+		
+		ul.src li a {
+			-moz-border-radius: 5px;
+			-webkit-border-radius: 5px;
+			display: inline-block;
+			background-color: #E8E8E8;
+			padding: 0.2em 0.5em;
+			margin: 0 0.1em 0.2em 0;
+			color: #333;
+			text-transform: uppercase;
+			text-decoration: none;
+		}
+		
+		ul.src li a:hover {
+			background-color: #333;
+			color: #FFF;
+		}
+		
+		body.dark {
+			background-color: #000;
+			color: #666;
+		}
+		
+		body.dark ul.src li a {
+			background-color: #222;
+			color: #999;
+		}
+		
+		body.dark ul.src li a:hover {
+			background-color: #333;
+			color: #FFF;
+		}
+		
+	</style>
+	
+	<body id="body">
+		<div class="col" style="margin-right: 100px;">
+			<h1>Today</h1>
+			<ul class="src">
+				<li>
+					<a href="http://www.spc.noaa.gov/products/outlook/day1otlk.html">Day 1</a>
+					<a href="http://www.spc.noaa.gov/">SPC</a>
+				</li>
+				<li><a href="http://www.spc.noaa.gov/exper/soundings/">Soundings</a></li>
+				<li><a href="http://www.rap.ucar.edu/weather/upper/">Upper-air</a></li>
+				<li>
+					<a href="http://www.twisterdata.com/index.php?prog=forecast&model=RUC">RUC</a>
+					<a href="http://www.twisterdata.com/index.php?prog=forecast&model=NAM">NAM</a>
+				</li>
+				<li><a href="http://www.spc.noaa.gov/climo/reports/today.html">Reports</a></li>
+				<li class="padded"><span id="USNOtime">Loading...</span></li>
+			</ul>
+		</div>
+		<div class="col">
+			<h1>Now</h1>
+			<ul class="src">
+				<li>
+					<a href="http://www.rap.ucar.edu/weather/satellite/">Sat.</a>
+					<a href="http://www.rap.ucar.edu/weather/satellite/displaySat.php">US</a>
+					<a href="http://www.rap.ucar.edu/weather/satellite/displaySat.php?duration=3">loop</a>
+				</li>
+				<li><a href="http://www.rap.ucar.edu/weather/surface/">Surface</a></li>
+				<li><a href="http://www.wunderground.com/radar/map.asp">Radar</a></li>
+				<li><a href="http://www.spc.noaa.gov/exper/mesoanalysis/">Meso. analysis</a></li>
+				<li><a href="http://www.spc.noaa.gov/exper/compmap/">Compmap</a></li>
+				<li>
+					<a href="http://www.wunderground.com/severe.asp">WWA</a>
+					<a href="http://www.spc.noaa.gov/products/md/">MCD</a>
+				</li>
+			</ul>
+		</div>
+		
+	<script type="text/javascript">
+		
+		function setTime() {
+			var span = document.getElementById("USNOtime");
+			var d = new Date();
+			var hh = d.getUTCHours();
+			hh = hh < 10 ? "0" + hh : hh;
+			var mm = d.getUTCMinutes();
+			mm = mm < 10 ? "0" + mm : mm;
+			var ss = d.getUTCSeconds();
+			ss = ss < 10 ? "0" + ss : ss;
+			
+			if (d.getHours() >= 20 || d.getHours() < 8) // 8pm-8am local time
+				document.getElementById("body").className = "dark";
+			else
+				document.getElementById("body").className = "";
+			
+			span.innerHTML = hh + ":" + mm + ":" + ss + " UTC";
+			setTimeout("setTime()", 1000);
+		}
+		
+		window.onload=setTime;
+	
+	</script>	
+		
+	</body>
+</html>

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>The Suck Zone  &ndash; Missouri madness </title>
+	
+	<link rel="alternate" title="" type="application/atom+xml" href="/storm-blog/atom.xml">
+	
+	<link rel="stylesheet" href="/storm-blog/styles/blueprint/screen.css" type="text/css" media="screen, projection">
+	<link rel="stylesheet" href="/storm-blog/styles/blueprint/print.css" type="text/css" media="print">	
+	<!--[if IE]><link rel="stylesheet" href="/storm-blog/styles/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
+	
+	<link rel="stylesheet" href="/storm-blog/styles/main.css" type="text/css">
+	
+	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.0/jquery.min.js"></script>
+	
+	<script type="text/javascript">
+		var radarOverlay, map, mapDiv, marker;
+		
+		var refreshMarker = function() {
+			mapDiv = document.getElementById("map");
+			if (mapDiv == null) {
+				return;
+			}
+
+			$.get("/storm-blog/spotter_feed.cfm", function(data) {
+				var objects = data.split("End:");
+				var found = false;
+
+				for (var i = 0; i < objects.length; i++) {
+					var object = objects[i];
+					if (object.indexOf("Rockwell Schrock") > -1) {
+						var lines = object.split("\n");
+						var coords = lines[1].split(" ")[1].split(",");
+						var utcTime = lines[2].split("\\n")[1];
+						var date = new Date(Date.parse(utcTime));
+						
+						var now = new Date();
+						var minutesAgo = Math.round((now.getTime() - date.getTime()) / 60000);
+
+						var latlng = new google.maps.LatLng(coords[0], coords[1]);
+
+						if (map == null) {
+							map = new google.maps.Map(mapDiv, {
+								zoom: 8,
+								mapTypeId: google.maps.MapTypeId.ROADMAP
+							});
+
+							marker = new google.maps.Marker({
+								map: map
+							});
+						}
+
+						map.setCenter(latlng);
+						marker.setPosition(latlng);
+						
+						$("#map_date").text(minutesAgo + " " + (minutesAgo == 1 ? "minute" : "minutes") + " ago (" + utcTime + ")");
+						
+						found = true;
+						break;
+					}
+				}
+				
+				if (found) {
+					refreshRadarOverlay();
+					$("#map, #map_info").show();
+				} else {
+					$("#map, #map_info").hide();
+				}
+
+			});
+		};
+
+		var refreshRadarOverlay = function() {
+			var imageBounds = new google.maps.LatLngBounds(
+			    new google.maps.LatLng(21.652538062803, -127.620375523875420),
+			    new google.maps.LatLng(50.406626367301044,-66.517937876818));
+			
+			var oldMap = map;
+
+			if (radarOverlay != null) {
+				oldMap = radarOverlay.getMap();
+				radarOverlay.setMap(null)
+			};
+
+			radarOverlay = new google.maps.GroundOverlay("http://radar.weather.gov/ridge/Conus/RadarImg/latest_radaronly.gif", imageBounds, { opacity: 0.5, map: oldMap });
+		};
+
+
+		setInterval(refreshMarker, 1 * 60 * 1000);
+
+		$(function() {
+			refreshMarker();
+
+			$("#radar_check").click(function() {
+				var check = $("#radar_check");
+				if (check.prop("checked")) {
+					radarOverlay.setMap(map);
+				} else {
+					radarOverlay.setMap(null);
+				}
+			});
+		});
+	
+	</script>
+	
+</head>
+<body>
+
+	<div class="container" id="hd">
+		
+	</div>
+	
+	<div class="container" id="nv">
+		
+		<ul>
+			<li><a href="/storm-blog/">Latest</a></li>
+			<li><a href="/storm-blog/2015.html">2015</a></li>
+			<li><a href="/storm-blog/2011.html">2011</a></li>
+			<li><a href="/storm-blog/2010.html">2010</a></li>
+			<li><a href="/storm-blog/2009.html">2009</a></li>
+			<li><a href="/storm-blog/2007.html">2007</a></li>
+			<li><a href="/storm-blog/2006.html">2006</a></li>			
+			<li><a href="/storm-blog/archive.html">Archive</a></li>
+			<!--<li><a href="/storm-blog/map.html">Live Map</a></li>-->
+			<li><a href="http://twitter.com/suckzone">Twitter</a></li>
+			<li><a href="/storm-blog/atom.xml">RSS</a></li>
+			<li><a href="/storm-blog/about.html">About</a></li>
+		</ul>
+		
+	</div>
+
+	<div class="container" id="notice">
+		<p>
+			<b>LIVE STREAMING</b> &ndash;
+			Download <a href="https://itunes.apple.com/app/id972909677">Periscope</a> and follow <a href="http://twitter.com/suckzone">@suckzone</a> to be notified when streams begin.
+		</p>
+	</div>
+	
+	<div class="container" id="map_info" style="display: none">
+		<div style="padding: 5px 20px; background-color: #333; color: #fff">
+			<div style="float: right">
+				Position updates every minute &ndash; 
+				<input type="checkbox" id="radar_check" checked="checked"><label for="radar_check" style="font-weight: normal">Radar overlay</label>
+			</div>
+			<b>LATEST POSITION</b> &ndash;
+			<span id="map_date"></span>
+		</div>
+	</div>
+
+	<div class="container" id="map" style="display: none">
+	
+	</div>
+	
+	
+	<div class="container" id="bd">
+		<div class="prepend-2 span-13 append-1">
+			
+			<h2>
+	<a class="invisible" href="">
+		May 12, 2011 &ndash; 
+		Missouri madness
+	</a>
+</h2>
+
+
+
+<p style="text-align:center;"><a href="https://picasaweb.google.com/lh/photo/1wmgoFS6tub_TYEw9aRPkQ?feat=directlink"><img src="https://lh4.googleusercontent.com/_8Y30e9LNsno/TcyfaOMX3pI/AAAAAAAADDw/LVw1PFo6tZc/s400/DSC_7473.JPG" alt="" /></a></p>
+<ul>
+	<li><strong><a href="http://goo.gl/maps/NeNN">Route map</a></strong></li>
+	<li><strong><a href="https://picasaweb.google.com/schrockwell/May122011?feat=directlink">Photo gallery</a></strong></li>
+	<li><strong>Trip meter:</strong> 730 miles</li>
+	<li><strong>Time:</strong> 14 hours</li>
+	<li><strong>From:</strong> Zanesville, OH <strong>To:</strong> Springfield, MO</li>
+	<li><strong>Summary:</strong> Caught a tornado-warned cell in southwestern MO on a marginal day</li>
+</ul>
+<p>So the <span class="caps">SPC</span> put in a slight risk area down around the Ozarks. I woke up in eastern Ohio. &#8220;Challenge accepted&#8221;, I thought to myself as I rose out of bed at 6 AM. I finally hit the road at 7:30 and drove and drove and drove and drove.</p>
+<p>Columbus? No problem! Indianapolis? Been there. St. Louis? Done it.</p>
+<p>The setup looked questionable all day. The day started muggy, but dried out as the temperature rose into the upper 80&#8217;s. There was some ongoing convection from the night before, but it dried up as the sun rose higher. By 4 PM I had made it through St. Louis without incident, but the sky still resembled a calm spring day. I had no real target for the afternoon, since it was essentially a race to get as far as possible into the area of good air.</p>
+<p>Four o&#8217;clock rolled around and the radar scope started lighting up with a dozen little cells. I could see them going up off the distance, amidst the haze. I continued trucking southwest on I-44.</p>
+<p>Right before Lebanon, a road sign flashed: &#8220;<span class="caps">ACCIDENT</span> <span class="caps">AHEAD</span>. 45 <span class="caps">MINUTE</span> <span class="caps">DELAY</span>.&#8221; No way. This can&#8217;t be happening, not now. I pulled off and attempted to detour around the accident by venturing onto the local backroads, aiming for Springfield, MO, so I could rejoin the interstate there. It was soon that I realized the comedy of errors playing itself out:</p>
+<p><span class="caps">MISTAKE</span> #1: I had forgotten to fill up the gas tank. I barely had enough gas left to limp into Springfield.</p>
+<p><span class="caps">MISTAKE</span> #2: Those roads are windy. And tree-y. You can&#8217;t see anything back there.</p>
+<p><span class="caps">MISTAKE</span> #3: Good luck getting cell phone reception, much less a reliable data connection.</p>
+<p>So there I was, chasing half-blind with some old radar data and windy, barely-paved roads. I caught myself laughing at the absurdity of it all.</p>
+<p>Well, it turns out some of those backwoods towns are more substantial than I thought, and I was able to fill the gas tank. I glanced at the radar and saw a small cell about 20 miles to the west that had uncharacteristically split into two storms, with the right-hand taking a hard right-turn and strengthening. This &#8220;right-split&#8221; storm is commonly seen in highly-sheared environments, but not in a marginal day like today. This gave me a good feeling, and its motion was slow and in the right direction. Seeing no better options, I continued west, directly towards it.</p>
+<p style="text-align:center;"><a href="https://picasaweb.google.com/lh/photo/jk-_MTM-jRCjbXtlXZOMSA?feat=directlink"><img src="https://lh3.googleusercontent.com/_8Y30e9LNsno/TcyfFSQRtLI/AAAAAAAADDY/ZR0w_KKGRxU/s400/DSC_7449.JPG" alt="" /></a></p>
+<p>Bam! Not two minutes later, the storm received a tornado warning! Elation. It might have been small, but it looked good on radar, and had a little bit of a weak velocity couplet, indicating a rotation mesocyclone. Things were looking up! Haze was obscuring the storm, so I hoped I could get there in time.</p>
+<p style="text-align:center;"><a href="https://picasaweb.google.com/lh/photo/lz_DhAGWgA8wGQd64-2iow?feat=directlink"><img src="https://lh6.googleusercontent.com/_8Y30e9LNsno/TcyfFpqDT0I/AAAAAAAADDc/Nb1PostCtmU/s400/DSC_7453.JPG" alt="" /></a></p>
+<p>The structure made itself apparent as I meandered through some small towns and into more open country where I could see the dang thing. Overall, it had a nice look to it.</p>
+<p style="text-align:center;"><a href="https://picasaweb.google.com/lh/photo/eOnihJexHxWr3sH0jTt0kQ?feat=directlink"><img src="https://lh6.googleusercontent.com/_8Y30e9LNsno/TcyfGEml97I/AAAAAAAADDg/oJMjXed_3K0/s400/DSC_7457.JPG" alt="" /></a></p>
+<p>There was some wild motion underneath it. I was still rather far away, but I saw some dust or condensation rising into the base, originating from the ground. It was in a narrow spot, and I thought at first it could have been the start of a rotating funnel, but nothing else ever became of it. It was likely just some dirt being kicked up by a localized downburst.</p>
+<p style="text-align:center;"><a href="https://picasaweb.google.com/lh/photo/VMFGCTw36YJ9xe7YgrXwHw?feat=directlink"><img src="https://lh4.googleusercontent.com/_8Y30e9LNsno/TcyfG7v4HlI/AAAAAAAADDs/fJrpJnRAHqY/s400/DSC_7471.JPG" alt="" /></a></p>
+<p>I had gotten to the cell as it was dying. I let the storm pass directly to my north and felt the cool downdraft as it passed me by. I jogged in front of it once more, but there was no more cool structure to see, so I set my sights on Springfield.</p>
+<p>Today, I accomplished 100% of what I had planned, and I was on one of only two tornado-warned cells in Missouri. After a 700 mile drive to get there, consdiering everything that might have gone wrong in between, I&#8217;d say this day was a complete success.</p>
+<p>Did I get a little lucky? Of course. But when you&#8217;re chasing, sometimes that&#8217;s all you&#8217;ve got to rely on.</p>
+<p>Some barbeque and a Boulevard later, I&#8217;m ready to dream of gumdrops and supercells. Good night!</p>
+<p style="text-align:center;"><a href="https://picasaweb.google.com/lh/photo/hHsgE4xI76gTWSW7ua2e9Q?feat=directlink"><img src="https://lh4.googleusercontent.com/_8Y30e9LNsno/TcyfaX9SHbI/AAAAAAAADD0/2L_IN-BVrmI/s400/DSC_7474.JPG" alt="" /></a></p>
+
+<div style="margin: 3em 0; border-bottom: 1px solid #CCCCCC"></div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript" src="http://disqus.com/forums/suckzone/embed.js"></script>
+<noscript><a href="http://suckzone.disqus.com/?url=ref">View the discussion thread.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+			
+		</div>
+		<div class="span-6 append-2 last">
+			
+			<!-- <div id="map" style="width: 230px; height: 300px;"></div>
+			<p id="map_time"></p> -->
+			
+			<div id="twitter_div">
+				<a class="twitter-timeline" href="https://twitter.com/suckzone" data-widget-id="592428431297613824">Tweets by @suckzone</a>
+				<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+			</div>
+		</div>
+	</div>
+	
+	
+	<div class="container" id="ft">
+		All content &copy; 2015 <a href="http://rockwellschrock.com/">Rockwell Schrock</a>. 
+		Powered by <a href="http://jekyllrb.com/">Jekyll</a>.
+	</div>
+	
+</div>
+
+<!-- Disqus -->
+<script type="text/javascript">
+//<![CDATA[
+(function() {
+		var links = document.getElementsByTagName('a');
+		var query = '?';
+		for(var i = 0; i < links.length; i++) {
+			if(links[i].href.indexOf('#disqus_thread') >= 0) {
+				query += 'url' + i + '=' + encodeURIComponent(links[i].href) + '&';
+			}
+		}
+		document.write('<script charset="utf-8" type="text/javascript" src="http://disqus.com/forums/suckzone/get_num_replies.js' + query + '"></' + 'script>');
+	})();
+//]]>
+</script>
+
+<!-- Google Analytics -->
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-4760872-7");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</body>
+</html>

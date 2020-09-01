@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>The Suck Zone  &ndash; Tornado duo </title>
+	
+	<link rel="alternate" title="" type="application/atom+xml" href="/storm-blog/atom.xml">
+	
+	<link rel="stylesheet" href="/storm-blog/styles/blueprint/screen.css" type="text/css" media="screen, projection">
+	<link rel="stylesheet" href="/storm-blog/styles/blueprint/print.css" type="text/css" media="print">	
+	<!--[if IE]><link rel="stylesheet" href="/storm-blog/styles/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
+	
+	<link rel="stylesheet" href="/storm-blog/styles/main.css" type="text/css">
+	
+	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.0/jquery.min.js"></script>
+	
+	<script type="text/javascript">
+		var radarOverlay, map, mapDiv, marker;
+		
+		var refreshMarker = function() {
+			mapDiv = document.getElementById("map");
+			if (mapDiv == null) {
+				return;
+			}
+
+			$.get("/storm-blog/spotter_feed.cfm", function(data) {
+				var objects = data.split("End:");
+				var found = false;
+
+				for (var i = 0; i < objects.length; i++) {
+					var object = objects[i];
+					if (object.indexOf("Rockwell Schrock") > -1) {
+						var lines = object.split("\n");
+						var coords = lines[1].split(" ")[1].split(",");
+						var utcTime = lines[2].split("\\n")[1];
+						var date = new Date(Date.parse(utcTime));
+						
+						var now = new Date();
+						var minutesAgo = Math.round((now.getTime() - date.getTime()) / 60000);
+
+						var latlng = new google.maps.LatLng(coords[0], coords[1]);
+
+						if (map == null) {
+							map = new google.maps.Map(mapDiv, {
+								zoom: 8,
+								mapTypeId: google.maps.MapTypeId.ROADMAP
+							});
+
+							marker = new google.maps.Marker({
+								map: map
+							});
+						}
+
+						map.setCenter(latlng);
+						marker.setPosition(latlng);
+						
+						$("#map_date").text(minutesAgo + " " + (minutesAgo == 1 ? "minute" : "minutes") + " ago (" + utcTime + ")");
+						
+						found = true;
+						break;
+					}
+				}
+				
+				if (found) {
+					refreshRadarOverlay();
+					$("#map, #map_info").show();
+				} else {
+					$("#map, #map_info").hide();
+				}
+
+			});
+		};
+
+		var refreshRadarOverlay = function() {
+			var imageBounds = new google.maps.LatLngBounds(
+			    new google.maps.LatLng(21.652538062803, -127.620375523875420),
+			    new google.maps.LatLng(50.406626367301044,-66.517937876818));
+			
+			var oldMap = map;
+
+			if (radarOverlay != null) {
+				oldMap = radarOverlay.getMap();
+				radarOverlay.setMap(null)
+			};
+
+			radarOverlay = new google.maps.GroundOverlay("http://radar.weather.gov/ridge/Conus/RadarImg/latest_radaronly.gif", imageBounds, { opacity: 0.5, map: oldMap });
+		};
+
+
+		setInterval(refreshMarker, 1 * 60 * 1000);
+
+		$(function() {
+			refreshMarker();
+
+			$("#radar_check").click(function() {
+				var check = $("#radar_check");
+				if (check.prop("checked")) {
+					radarOverlay.setMap(map);
+				} else {
+					radarOverlay.setMap(null);
+				}
+			});
+		});
+	
+	</script>
+	
+</head>
+<body>
+
+	<div class="container" id="hd">
+		
+	</div>
+	
+	<div class="container" id="nv">
+		
+		<ul>
+			<li><a href="/storm-blog/">Latest</a></li>
+			<li><a href="/storm-blog/2015.html">2015</a></li>
+			<li><a href="/storm-blog/2011.html">2011</a></li>
+			<li><a href="/storm-blog/2010.html">2010</a></li>
+			<li><a href="/storm-blog/2009.html">2009</a></li>
+			<li><a href="/storm-blog/2007.html">2007</a></li>
+			<li><a href="/storm-blog/2006.html">2006</a></li>			
+			<li><a href="/storm-blog/archive.html">Archive</a></li>
+			<!--<li><a href="/storm-blog/map.html">Live Map</a></li>-->
+			<li><a href="http://twitter.com/suckzone">Twitter</a></li>
+			<li><a href="/storm-blog/atom.xml">RSS</a></li>
+			<li><a href="/storm-blog/about.html">About</a></li>
+		</ul>
+		
+	</div>
+
+	<div class="container" id="notice">
+		<p>
+			<b>LIVE STREAMING</b> &ndash;
+			Download <a href="https://itunes.apple.com/app/id972909677">Periscope</a> and follow <a href="http://twitter.com/suckzone">@suckzone</a> to be notified when streams begin.
+		</p>
+	</div>
+	
+	<div class="container" id="map_info" style="display: none">
+		<div style="padding: 5px 20px; background-color: #333; color: #fff">
+			<div style="float: right">
+				Position updates every minute &ndash; 
+				<input type="checkbox" id="radar_check" checked="checked"><label for="radar_check" style="font-weight: normal">Radar overlay</label>
+			</div>
+			<b>LATEST POSITION</b> &ndash;
+			<span id="map_date"></span>
+		</div>
+	</div>
+
+	<div class="container" id="map" style="display: none">
+	
+	</div>
+	
+	
+	<div class="container" id="bd">
+		<div class="prepend-2 span-13 append-1">
+			
+			<h2>
+	<a class="invisible" href="">
+		June 10, 2010 &ndash; 
+		Tornado duo
+	</a>
+</h2>
+
+
+
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/WBXptTd60LHXP1Ws9B2R-uY8qtkpsrb5tJRxGocy0Sc?feat=directlink"><img src="http://lh4.ggpht.com/_8Y30e9LNsno/TBHk1G3eezI/AAAAAAAACy4/uRHzOsa-AEw/s400/DSC_6013%20A.jpg" alt="" /></a></p>
+<ul>
+	<li><strong><a href="http://picasaweb.google.com/lh/photo/6SovY-S7kXU2neIhxpn5EA?feat=directlink" title="approx">Route map</a></strong></li>
+	<li><strong><a href="http://picasaweb.google.com/schrockwell/June102010?feat=directlink">Photo gallery</a></strong></li>
+	<li><strong>Trip meter:</strong> about 400 miles</li>
+	<li><strong>Time:</strong> 14 hours</li>
+	<li><strong>From:</strong> Ogallala, NE to Sidney, NE</li>
+	<li><strong>Summary:</strong> A monster cyclic supercell dropped two beautiful cones and roped out beautifully</li>
+</ul>
+<p>Today will stand for a long time as the most incredible day of my storm chasing career.</p>
+<p>We sat in Sidney for lunch and waited and waited and waited for something to happen. Roger and Chris retrieved van two from Ogallala, where its starter had been replaced. We didn&#8217;t leave until about 4 PM, and we booked it west and then south on Route 71, again passing the foreboding &#8220;NO <span class="caps">GAS</span> <span class="caps">FOR</span> 75 <span class="caps">MILES</span>&#8221; sign. We stopped and observed one supercell on the CO/NE border, but it was nothing special.</p>
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/38lawYFAAnyFHN6n7mlslOY8qtkpsrb5tJRxGocy0Sc?feat=directlink"><img src="http://lh3.ggpht.com/_8Y30e9LNsno/TBHjmaHAzsI/AAAAAAAACx8/VQYcKFxv364/s400/DSC_5928.JPG" alt="" /></a></p>
+<p>Storms were going bonkers further south, and so away we went. There were a few superells in a line and none could keep its structure, except for one. This southernmost cell in the cluster is known as a &#8220;tail-end Charlie&#8221;. On radar, it was a <em>beast</em>.</p>
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/4WfupqxJfEcUYsUuOPDAg-Y8qtkpsrb5tJRxGocy0Sc?feat=directlink"><img src="http://lh5.ggpht.com/_8Y30e9LNsno/TBHjqglp1nI/AAAAAAAACyI/X6d6WCydMSg/s400/DSC_5966.JPG" alt="" /></a></p>
+<p>At about fifty miles away, we could make out the smooth updraft base of the cell. Suddenly a small protrusion appeared out of the bottom and began extending towards the ground. Very quickly, this funnel reached towards the ground in a classic cone shape. Tornado number one of the day was on the ground, and boy was it a beauty. Backlit by the setting sun, the high-contrast funnel was clearly visible for miles around. It sure beats the rain-wrapped thing we saw earlier this week.</p>
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/6HqVxNCMGNvacz1I2Du35OY8qtkpsrb5tJRxGocy0Sc?feat=directlink"><img src="http://lh5.ggpht.com/_8Y30e9LNsno/TBHkulKp60I/AAAAAAAACyg/RxuObtHTn2k/s400/DSC_5996%20A.jpg" alt="" /></a></p>
+<p>We couldn&#8217;t stop driving to take pictures, because this cell was ramping up and was only just starting its show! Tornado one lifted very quickly without roping out, just rising straight back up into the wall cloud after being on the ground for a few minutes.</p>
+<p>Much closer to the cell we got a chance to stop amongst the horde of chasers and VORTEX2 vehicles, and before long the supercell cycled and dropped its second tornado. It had nearly the same appearance as the first tornado, though it grew wider at the base. Absolutely stunning.</p>
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/WBXptTd60LHXP1Ws9B2R-uY8qtkpsrb5tJRxGocy0Sc?feat=directlink"><img src="http://lh4.ggpht.com/_8Y30e9LNsno/TBHk1G3eezI/AAAAAAAACy4/uRHzOsa-AEw/s400/DSC_6013%20A.jpg" alt="" /></a></p>
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/ScE67JOcX4m79Cbpqc6ocQ?feat=directlink"><img src="http://lh6.ggpht.com/_8Y30e9LNsno/TBHkyBLgmqI/AAAAAAAACzo/hiZaizbMXBc/s400/DSC_6005%20A.jpg" alt="" /></a></p>
+<p>Tornado two was on the ground for a few minutes more and then gracefully roped out. We nearly missed the rope-out stage because the funnel was so skinny.</p>
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/dRGV5JfyEDg_UGdraPGeYeY8qtkpsrb5tJRxGocy0Sc?feat=directlink"><img src="http://lh3.ggpht.com/_8Y30e9LNsno/TBHk2aIE3GI/AAAAAAAACzA/XXegDVx7Qh0/s400/DSC_6023.JPG" alt="" /></a></p>
+<p>The cell chased us back east as we stayed in front of it, stopping a few times to take in the beautiful storm structure. It may be a long time before I see another supercell quite this well-organized. The entire motion of the storm was absolutely intense, and its rock-solid appearance was stunning. Roger called it the &#8220;best structure of the year&#8221;, a &#8220;nine out of ten&#8221; supercell.</p>
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/HpwfAqvNJ_SU14D5BxezyeY8qtkpsrb5tJRxGocy0Sc?feat=directlink"><img src="http://lh4.ggpht.com/_8Y30e9LNsno/TBHk50W3BCI/AAAAAAAACzQ/_3o9TPpCskQ/s400/DSC_6047%20A.jpg" alt="" /></a></p>
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/pKLPL5wJJPlAPyEzpEx2JOY8qtkpsrb5tJRxGocy0Sc?feat=directlink"><img src="http://lh5.ggpht.com/_8Y30e9LNsno/TBHl5Ys-MZI/AAAAAAAACzc/8dlM8NJeoqQ/s400/DSC_6101%20A.jpg" alt="" /></a></p>
+<p>As night fell, the lower-level jet ramped up and began feeding this storm even more. As we trekked north and east around the forward flank core, there were at least two more tornado reports back on the rear flank where we could not see. As we got in front of the cell we were treated to a fantastic light show as near-constant lightning lit up the whole updraft and underside of the storm. You could make out every piece of storm structure even in the pitch black. It looks like daylight in my photos, but only because there was so much lightning going on. Phenominal.</p>
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/ZAAVMowtsCKZl6mT-Br2geY8qtkpsrb5tJRxGocy0Sc?feat=directlink"><img src="http://lh4.ggpht.com/_8Y30e9LNsno/TBHl65afZlI/AAAAAAAACzg/qbgdLCc7seo/s400/DSC_6151.JPG" alt="" /></a></p>
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/rc79KL2swZmT59JVIFpdXOY8qtkpsrb5tJRxGocy0Sc?feat=directlink"><img src="http://lh4.ggpht.com/_8Y30e9LNsno/TBHl7_ujJAI/AAAAAAAACzk/9yVaf94kwvc/s400/DSC_6320.JPG" alt="" /></a></p>
+<p>Roger and the guides keep going on about how people get addicted to storm chasing and keep coming back year after year.</p>
+<p>Now I know how that feels.</p>
+<p>I don&#8217;t even know what else to say beyond this point. The photographs are the true storytellers today.</p>
+<p>It&#8217;s almost midnight now, as we head back to our hotel in Sidney. We stopped at a gas station for dinner, and I bought a sandwitch composed of some chicken product and cheese product crammed between two pieces of bread product and stuck under a heat lamp all day.</p>
+<p>It was the most incredible dinner I&#8217;ve ever had.</p>
+
+<div style="margin: 3em 0; border-bottom: 1px solid #CCCCCC"></div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript" src="http://disqus.com/forums/suckzone/embed.js"></script>
+<noscript><a href="http://suckzone.disqus.com/?url=ref">View the discussion thread.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+			
+		</div>
+		<div class="span-6 append-2 last">
+			
+			<!-- <div id="map" style="width: 230px; height: 300px;"></div>
+			<p id="map_time"></p> -->
+			
+			<div id="twitter_div">
+				<a class="twitter-timeline" href="https://twitter.com/suckzone" data-widget-id="592428431297613824">Tweets by @suckzone</a>
+				<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+			</div>
+		</div>
+	</div>
+	
+	
+	<div class="container" id="ft">
+		All content &copy; 2015 <a href="http://rockwellschrock.com/">Rockwell Schrock</a>. 
+		Powered by <a href="http://jekyllrb.com/">Jekyll</a>.
+	</div>
+	
+</div>
+
+<!-- Disqus -->
+<script type="text/javascript">
+//<![CDATA[
+(function() {
+		var links = document.getElementsByTagName('a');
+		var query = '?';
+		for(var i = 0; i < links.length; i++) {
+			if(links[i].href.indexOf('#disqus_thread') >= 0) {
+				query += 'url' + i + '=' + encodeURIComponent(links[i].href) + '&';
+			}
+		}
+		document.write('<script charset="utf-8" type="text/javascript" src="http://disqus.com/forums/suckzone/get_num_replies.js' + query + '"></' + 'script>');
+	})();
+//]]>
+</script>
+
+<!-- Google Analytics -->
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-4760872-7");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</body>
+</html>

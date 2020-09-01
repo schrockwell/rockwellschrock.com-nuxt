@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>The Suck Zone  &ndash; Day 1 - The Three Little Supercells </title>
+	
+	<link rel="alternate" title="" type="application/atom+xml" href="/storm-blog/atom.xml">
+	
+	<link rel="stylesheet" href="/storm-blog/styles/blueprint/screen.css" type="text/css" media="screen, projection">
+	<link rel="stylesheet" href="/storm-blog/styles/blueprint/print.css" type="text/css" media="print">	
+	<!--[if IE]><link rel="stylesheet" href="/storm-blog/styles/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
+	
+	<link rel="stylesheet" href="/storm-blog/styles/main.css" type="text/css">
+	
+	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.0/jquery.min.js"></script>
+	
+	<script type="text/javascript">
+		var radarOverlay, map, mapDiv, marker;
+		
+		var refreshMarker = function() {
+			mapDiv = document.getElementById("map");
+			if (mapDiv == null) {
+				return;
+			}
+
+			$.get("/storm-blog/spotter_feed.cfm", function(data) {
+				var objects = data.split("End:");
+				var found = false;
+
+				for (var i = 0; i < objects.length; i++) {
+					var object = objects[i];
+					if (object.indexOf("Rockwell Schrock") > -1) {
+						var lines = object.split("\n");
+						var coords = lines[1].split(" ")[1].split(",");
+						var utcTime = lines[2].split("\\n")[1];
+						var date = new Date(Date.parse(utcTime));
+						
+						var now = new Date();
+						var minutesAgo = Math.round((now.getTime() - date.getTime()) / 60000);
+
+						var latlng = new google.maps.LatLng(coords[0], coords[1]);
+
+						if (map == null) {
+							map = new google.maps.Map(mapDiv, {
+								zoom: 8,
+								mapTypeId: google.maps.MapTypeId.ROADMAP
+							});
+
+							marker = new google.maps.Marker({
+								map: map
+							});
+						}
+
+						map.setCenter(latlng);
+						marker.setPosition(latlng);
+						
+						$("#map_date").text(minutesAgo + " " + (minutesAgo == 1 ? "minute" : "minutes") + " ago (" + utcTime + ")");
+						
+						found = true;
+						break;
+					}
+				}
+				
+				if (found) {
+					refreshRadarOverlay();
+					$("#map, #map_info").show();
+				} else {
+					$("#map, #map_info").hide();
+				}
+
+			});
+		};
+
+		var refreshRadarOverlay = function() {
+			var imageBounds = new google.maps.LatLngBounds(
+			    new google.maps.LatLng(21.652538062803, -127.620375523875420),
+			    new google.maps.LatLng(50.406626367301044,-66.517937876818));
+			
+			var oldMap = map;
+
+			if (radarOverlay != null) {
+				oldMap = radarOverlay.getMap();
+				radarOverlay.setMap(null)
+			};
+
+			radarOverlay = new google.maps.GroundOverlay("http://radar.weather.gov/ridge/Conus/RadarImg/latest_radaronly.gif", imageBounds, { opacity: 0.5, map: oldMap });
+		};
+
+
+		setInterval(refreshMarker, 1 * 60 * 1000);
+
+		$(function() {
+			refreshMarker();
+
+			$("#radar_check").click(function() {
+				var check = $("#radar_check");
+				if (check.prop("checked")) {
+					radarOverlay.setMap(map);
+				} else {
+					radarOverlay.setMap(null);
+				}
+			});
+		});
+	
+	</script>
+	
+</head>
+<body>
+
+	<div class="container" id="hd">
+		
+	</div>
+	
+	<div class="container" id="nv">
+		
+		<ul>
+			<li><a href="/storm-blog/">Latest</a></li>
+			<li><a href="/storm-blog/2015.html">2015</a></li>
+			<li><a href="/storm-blog/2011.html">2011</a></li>
+			<li><a href="/storm-blog/2010.html">2010</a></li>
+			<li><a href="/storm-blog/2009.html">2009</a></li>
+			<li><a href="/storm-blog/2007.html">2007</a></li>
+			<li><a href="/storm-blog/2006.html">2006</a></li>			
+			<li><a href="/storm-blog/archive.html">Archive</a></li>
+			<!--<li><a href="/storm-blog/map.html">Live Map</a></li>-->
+			<li><a href="http://twitter.com/suckzone">Twitter</a></li>
+			<li><a href="/storm-blog/atom.xml">RSS</a></li>
+			<li><a href="/storm-blog/about.html">About</a></li>
+		</ul>
+		
+	</div>
+
+	<div class="container" id="notice">
+		<p>
+			<b>LIVE STREAMING</b> &ndash;
+			Download <a href="https://itunes.apple.com/app/id972909677">Periscope</a> and follow <a href="http://twitter.com/suckzone">@suckzone</a> to be notified when streams begin.
+		</p>
+	</div>
+	
+	<div class="container" id="map_info" style="display: none">
+		<div style="padding: 5px 20px; background-color: #333; color: #fff">
+			<div style="float: right">
+				Position updates every minute &ndash; 
+				<input type="checkbox" id="radar_check" checked="checked"><label for="radar_check" style="font-weight: normal">Radar overlay</label>
+			</div>
+			<b>LATEST POSITION</b> &ndash;
+			<span id="map_date"></span>
+		</div>
+	</div>
+
+	<div class="container" id="map" style="display: none">
+	
+	</div>
+	
+	
+	<div class="container" id="bd">
+		<div class="prepend-2 span-13 append-1">
+			
+			<h2>
+	<a class="invisible" href="">
+		June 06, 2010 &ndash; 
+		Day 1 - The Three Little Supercells
+	</a>
+</h2>
+
+
+
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/KIo76vIK0uGff73AksaNpA?feat=directlink"><img src="http://lh4.ggpht.com/_8Y30e9LNsno/TAyGACVnUtI/AAAAAAAAChQ/82gcM8oa-Bg/s400/burns%20panorama.jpg" alt="" /></a></p>
+<ul>
+	<li><strong><a href="http://picasaweb.google.com/lh/photo/YRXdyx-twdvn3DmRgiBlsQ?feat=directlink">Route map</a></strong></li>
+	<li><strong><a href="http://picasaweb.google.com/schrockwell/June62010">Photo gallery</a></strong></li>
+	<li><strong>Trip meter:</strong> about 350 miles</li>
+	<li><strong>Time:</strong> 10 hours</li>
+	<li><strong>From:</strong> Denver, CO, to Ogallala, NE</li>
+	<li><strong>Summary:</strong> We jumped around on three supercells in WY and NE and got to punch some cores</li>
+</ul>
+<p>Our first day out with <span class="caps">SLT</span> panned out really well and we got a lot more of a show than we were expecting. The setup was originally a slight risk area with some strong upper-level winds and sufficient moisture. The main problem was going to be getting the bases of storms to lower and tap into the good surface moisture that was hanging out below the capping inversion.</p>
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/xnXSIOLb007xrdmVMDGIJw?feat=directlink"><img src="http://lh4.ggpht.com/_8Y30e9LNsno/TAyFXEWryEI/AAAAAAAAChQ/zy04daYx79Y/s400/DSC_4805.JPG" alt="" /></a></p>
+<p>We drove just outside of Denver to Aurora at around 11 AM <span class="caps">MST</span>, grabbed some lunch, and hung out in a parking lot there watching things develop. What quickly became apparent was that any cumulonimbus towers going up were very high-based (8000 feet!). We were originally planning on playing the Denver Cyclone, an orographic phenomenon that results in a broad low-pressure system around the Denver area. We planned on catching the storms forming on the northern edge of this low, where westerly winds combine with upslope flow to generate lift for new updrafts.</p>
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/wgEGmINLP7u3KYcPvEEeTg?feat=directlink"><img src="http://lh3.ggpht.com/_8Y30e9LNsno/TAyFlchRihI/AAAAAAAAChQ/li9WqKzyQLQ/s400/DSC_4824.JPG" alt="" /></a></p>
+<p>Some cells finally started to get their act together and we drove up north of Cheyenne, WY, and watched the first supercell of the day approach from the northwest. It had a nice wall cloud for a bit, and it even had an <span class="caps">RFD</span> cut that spun up a little shear funnel (non-tornadic). We went further east on I-80, punching the core of storm one as it crossed the interstate. Wow, there was some intense hail and wind in that one. Just wait until I post the video from that!</p>
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/5E3M9mWffhZdow4DOz_drg?feat=directlink"><img src="http://lh3.ggpht.com/_8Y30e9LNsno/TAyFt79r4LI/AAAAAAAAChQ/4RkML1ursCA/s400/DSC_4883.JPG" alt="" /></a></p>
+<p>Then we went north of Burns, WY to watch cell number two. This was a cute cell that put out a lot of CG lightning but didn&#8217;t do much else. It was pretty photogenic as well. Roger yelled some obscenities at it to try to rile it up, but to no avail. We got back on the road.</p>
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/2GSlxWOoHfF9QPKk3yMMig?feat=directlink"><img src="http://lh6.ggpht.com/_8Y30e9LNsno/TAyF1uEz7KI/AAAAAAAAChQ/W_0Ekz-YZ-M/s400/DSC_4972.JPG" alt="" /></a></p>
+<p>By now, things were going bonkers east and south of us, so we hopped back on I-80 East. We crossed into Nebraska and contemplated our options. Cell two moved south of the interstate and intensified a fair amount. I don&#8217;t remember exactly, but there were soon some tornado-warned cells south of I-80, and a line of three discrete severe supercells up ahead to the northeast. The southern cells were beginning to converge and snuff each other out, so we went for the north option. Also we could see the upcoming third cell had a nice low base and some suspicious lowerings.</p>
+<p>We trucked north at Sidney, NE (&#8220;America&#8217;s favorite stopping place since 1867&#8221;) towards the cell and we could make out some amazing structure as we got closer.</p>
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/nh-9p-e1rVtpNWRDX7d6gQ?feat=directlink"><img src="http://lh6.ggpht.com/_8Y30e9LNsno/TAyF54xeK3I/AAAAAAAAChQ/iBn3L5FpFlQ/s400/DSC_5028.JPG" alt="" /></a></p>
+<p>The pictures almost tell the whole story, there. What they don&#8217;t show was the rapid cloud movement as the storm quickly advanced and scud rose up right into the base. We stopped briefly to admire the Libery Bell base and the inflow bands that stretched on for miles. It was really something else. Storm of the day, right there. Three&#8217;s a charm!</p>
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/nQC9hjZIJG1nF3Wtcb_rPQ?feat=directlink"><img src="http://lh3.ggpht.com/_8Y30e9LNsno/TAyF9Tb1ABI/AAAAAAAAChQ/gDn71s91T_M/s400/DSC_5048.JPG" alt="" /></a></p>
+<p>We stopped in Sidney for a bathroom break and then busted east again, but the storm crossed the interstate before we were able to get in front of it. We passed under the rear flank core and right under the mesocyclone of the storm, pelted by golfball hail and winds recorded at 80 <span class="caps">MPH</span>. You could look straight up and see the swirling of the base as it was happening. That storm was rotating <em>hard</em>, but luckily did not produce anything on top of us. We has a brief period of calm followed by the forward flank downdraft and the hail and rain accompanying that!</p>
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/t01ZTcuYZJpq0Cnct-e5uw?feat=directlink"><img src="http://lh3.ggpht.com/_8Y30e9LNsno/TAyF-9H_pGI/AAAAAAAAChQ/6V0J0FUDkjo/s400/DSC_5061.JPG" alt="" /></a></p>
+<p>Daylight was beginning to fade and the cells were becoming a  mesoscale convective system (<span class="caps">MCS</span>) &#8211; basically an unorganized mess of storms. We arrived in Ogallala, where Roger had booked our hotels earlier in the day, and had dinner and were treated to a spectacular sunset that you can only find on the Great Plains.</p>
+<p>As I was walking into the combination Taco Bell / <span class="caps">KFC</span>, I literally ran into Ari Preston, a fellow <span class="caps">NOAA</span> Hollings scholar who I had interned with in Norman last summer! He&#8217;s been out with VORTEX2 with the University of Michigan, and V2 is staying in Ogallala tonight as well. We had dinner and caught up. I found out that he &#8220;shared an elevator with Dr. Forbes&#8221; and that Mike Bettes is a really cool guy in person. V2 wraps up next week, and it sounds like the whole lot of them are pretty tired and frustrated at this point in the season and just want it to be over.</p>
+<p>Today was a fanatastic first day with a lot of fun little surprises. We got to see some nice structure, some severe hail and wind, and got to experience a mesocyclone up close and personal. We didn&#8217;t have to drive very far, and we are in great position for tomorrow&#8217;s action along the KS/NE border, as well. Thanks to Roger for making the best of our so-so positioning today. I&#8217;m looking forward to Forecasting 101 tomorrow morning in the Days Inn lobby.</p>
+<p>I&#8217;m beat. Check out the photos, and I&#8217;ll deal with the videos next week when I&#8217;m back. You&#8217;re going to have to wait to hear that hail we drove through.</p>
+<p style="text-align:center;"><a href="http://picasaweb.google.com/lh/photo/hhR24gTHP5LtxyB__TcLrA?feat=directlink"><img src="http://lh6.ggpht.com/_8Y30e9LNsno/TAyF_tIPb7I/AAAAAAAAChQ/8dvUFhzjBzI/s400/DSC_5062.JPG" alt="" /></a></p>
+
+<div style="margin: 3em 0; border-bottom: 1px solid #CCCCCC"></div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript" src="http://disqus.com/forums/suckzone/embed.js"></script>
+<noscript><a href="http://suckzone.disqus.com/?url=ref">View the discussion thread.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+			
+		</div>
+		<div class="span-6 append-2 last">
+			
+			<!-- <div id="map" style="width: 230px; height: 300px;"></div>
+			<p id="map_time"></p> -->
+			
+			<div id="twitter_div">
+				<a class="twitter-timeline" href="https://twitter.com/suckzone" data-widget-id="592428431297613824">Tweets by @suckzone</a>
+				<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+			</div>
+		</div>
+	</div>
+	
+	
+	<div class="container" id="ft">
+		All content &copy; 2015 <a href="http://rockwellschrock.com/">Rockwell Schrock</a>. 
+		Powered by <a href="http://jekyllrb.com/">Jekyll</a>.
+	</div>
+	
+</div>
+
+<!-- Disqus -->
+<script type="text/javascript">
+//<![CDATA[
+(function() {
+		var links = document.getElementsByTagName('a');
+		var query = '?';
+		for(var i = 0; i < links.length; i++) {
+			if(links[i].href.indexOf('#disqus_thread') >= 0) {
+				query += 'url' + i + '=' + encodeURIComponent(links[i].href) + '&';
+			}
+		}
+		document.write('<script charset="utf-8" type="text/javascript" src="http://disqus.com/forums/suckzone/get_num_replies.js' + query + '"></' + 'script>');
+	})();
+//]]>
+</script>
+
+<!-- Google Analytics -->
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-4760872-7");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</body>
+</html>

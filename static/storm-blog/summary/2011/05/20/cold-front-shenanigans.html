@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>The Suck Zone  &ndash; Cold front shenanigans </title>
+	
+	<link rel="alternate" title="" type="application/atom+xml" href="/storm-blog/atom.xml">
+	
+	<link rel="stylesheet" href="/storm-blog/styles/blueprint/screen.css" type="text/css" media="screen, projection">
+	<link rel="stylesheet" href="/storm-blog/styles/blueprint/print.css" type="text/css" media="print">	
+	<!--[if IE]><link rel="stylesheet" href="/storm-blog/styles/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
+	
+	<link rel="stylesheet" href="/storm-blog/styles/main.css" type="text/css">
+	
+	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.0/jquery.min.js"></script>
+	
+	<script type="text/javascript">
+		var radarOverlay, map, mapDiv, marker;
+		
+		var refreshMarker = function() {
+			mapDiv = document.getElementById("map");
+			if (mapDiv == null) {
+				return;
+			}
+
+			$.get("/storm-blog/spotter_feed.cfm", function(data) {
+				var objects = data.split("End:");
+				var found = false;
+
+				for (var i = 0; i < objects.length; i++) {
+					var object = objects[i];
+					if (object.indexOf("Rockwell Schrock") > -1) {
+						var lines = object.split("\n");
+						var coords = lines[1].split(" ")[1].split(",");
+						var utcTime = lines[2].split("\\n")[1];
+						var date = new Date(Date.parse(utcTime));
+						
+						var now = new Date();
+						var minutesAgo = Math.round((now.getTime() - date.getTime()) / 60000);
+
+						var latlng = new google.maps.LatLng(coords[0], coords[1]);
+
+						if (map == null) {
+							map = new google.maps.Map(mapDiv, {
+								zoom: 8,
+								mapTypeId: google.maps.MapTypeId.ROADMAP
+							});
+
+							marker = new google.maps.Marker({
+								map: map
+							});
+						}
+
+						map.setCenter(latlng);
+						marker.setPosition(latlng);
+						
+						$("#map_date").text(minutesAgo + " " + (minutesAgo == 1 ? "minute" : "minutes") + " ago (" + utcTime + ")");
+						
+						found = true;
+						break;
+					}
+				}
+				
+				if (found) {
+					refreshRadarOverlay();
+					$("#map, #map_info").show();
+				} else {
+					$("#map, #map_info").hide();
+				}
+
+			});
+		};
+
+		var refreshRadarOverlay = function() {
+			var imageBounds = new google.maps.LatLngBounds(
+			    new google.maps.LatLng(21.652538062803, -127.620375523875420),
+			    new google.maps.LatLng(50.406626367301044,-66.517937876818));
+			
+			var oldMap = map;
+
+			if (radarOverlay != null) {
+				oldMap = radarOverlay.getMap();
+				radarOverlay.setMap(null)
+			};
+
+			radarOverlay = new google.maps.GroundOverlay("http://radar.weather.gov/ridge/Conus/RadarImg/latest_radaronly.gif", imageBounds, { opacity: 0.5, map: oldMap });
+		};
+
+
+		setInterval(refreshMarker, 1 * 60 * 1000);
+
+		$(function() {
+			refreshMarker();
+
+			$("#radar_check").click(function() {
+				var check = $("#radar_check");
+				if (check.prop("checked")) {
+					radarOverlay.setMap(map);
+				} else {
+					radarOverlay.setMap(null);
+				}
+			});
+		});
+	
+	</script>
+	
+</head>
+<body>
+
+	<div class="container" id="hd">
+		
+	</div>
+	
+	<div class="container" id="nv">
+		
+		<ul>
+			<li><a href="/storm-blog/">Latest</a></li>
+			<li><a href="/storm-blog/2015.html">2015</a></li>
+			<li><a href="/storm-blog/2011.html">2011</a></li>
+			<li><a href="/storm-blog/2010.html">2010</a></li>
+			<li><a href="/storm-blog/2009.html">2009</a></li>
+			<li><a href="/storm-blog/2007.html">2007</a></li>
+			<li><a href="/storm-blog/2006.html">2006</a></li>			
+			<li><a href="/storm-blog/archive.html">Archive</a></li>
+			<!--<li><a href="/storm-blog/map.html">Live Map</a></li>-->
+			<li><a href="http://twitter.com/suckzone">Twitter</a></li>
+			<li><a href="/storm-blog/atom.xml">RSS</a></li>
+			<li><a href="/storm-blog/about.html">About</a></li>
+		</ul>
+		
+	</div>
+
+	<div class="container" id="notice">
+		<p>
+			<b>LIVE STREAMING</b> &ndash;
+			Download <a href="https://itunes.apple.com/app/id972909677">Periscope</a> and follow <a href="http://twitter.com/suckzone">@suckzone</a> to be notified when streams begin.
+		</p>
+	</div>
+	
+	<div class="container" id="map_info" style="display: none">
+		<div style="padding: 5px 20px; background-color: #333; color: #fff">
+			<div style="float: right">
+				Position updates every minute &ndash; 
+				<input type="checkbox" id="radar_check" checked="checked"><label for="radar_check" style="font-weight: normal">Radar overlay</label>
+			</div>
+			<b>LATEST POSITION</b> &ndash;
+			<span id="map_date"></span>
+		</div>
+	</div>
+
+	<div class="container" id="map" style="display: none">
+	
+	</div>
+	
+	
+	<div class="container" id="bd">
+		<div class="prepend-2 span-13 append-1">
+			
+			<h2>
+	<a class="invisible" href="">
+		May 20, 2011 &ndash; 
+		Cold front shenanigans
+	</a>
+</h2>
+
+
+
+<p style="text-align:center;"><a href="https://picasaweb.google.com/lh/photo/tLwZxrRFnLKTCa4W3oLwkw?feat=directlink"><img src="https://lh4.googleusercontent.com/_8Y30e9LNsno/TddKxEls08I/AAAAAAAADMY/xk_Odz6bqY4/s400/DSC_1237.jpg" alt="" /></a></p>
+<ul>
+	<li><strong><a href="https://picasaweb.google.com/schrockwell/May202011?feat=directlink">Photo gallery</a></strong></li>
+	<li><strong>Trip meter:</strong> about 450 miles</li>
+	<li><strong>Time:</strong> 12 hours</li>
+	<li><strong>From:</strong> Salina, KS <strong>To:</strong> Wichita, KS</li>
+	<li><strong>Summary:</strong> Caught some severe thunderstorms in central KS on a &#8220;nothing&#8221; day</li>
+</ul>
+<p>Today was a fun, relaxing day. Not much was forecast to happen in Kansas, and the higher probability of tornadoes was to be found in the Ark-La-Tex region, which is really far and completely not worth driving down for. We figured we&#8217;d play the weak dynamics up in Kansas and see what happens.</p>
+<p>So, with low expectations for the day ahead, we moseyed out of Salina this morning full of <span class="caps">IHOP</span> french toast. We made it to our first target, Great Bend, a few hours later. The cold front had positioned itself directly to our west, near Dodge City. It was only 12:30 and towering cumulus were already beginning to form.</p>
+<p style="text-align:center;"><a href="https://picasaweb.google.com/lh/photo/Al2TYaX9UOFuRfnykfPSSw?feat=directlink"><img src="https://lh4.googleusercontent.com/_8Y30e9LNsno/TddJV9p9DPI/AAAAAAAADLA/4HBnmzoCUsU/s400/DSC_0354.JPG" alt="" /></a></p>
+<p>Some showers popped up north of I-70, so we went back north to Russell. By the time we got there, new stuff showed up on radar back to our south, so off we went, retracing our steps. This was annoying at first, but it turned out to be the right call.</p>
+<p style="text-align:center;"><a href="https://picasaweb.google.com/lh/photo/wluTXu1MMTq9PlzxFmFMgA?feat=directlink"><img src="https://lh3.googleusercontent.com/_8Y30e9LNsno/TddJWj0h--I/AAAAAAAADLE/wl5V052jbFo/s400/DSC_0370.JPG" alt="" /></a></p>
+<p>We spent the rest of the day driving in circles and going back and forth on the highways around the towns of St. John and Pratt. That spot was golden, as storms initiated over Pratt and then slowly slid to the northeast along the cold front. Because they all moved in a line, we could essentially stay in one place and watch them pass by like a conveyor belt. They were slow and easy to follow and photograph. It made for a fun chase.</p>
+<p style="text-align:center;"><a href="https://picasaweb.google.com/lh/photo/VhzG5Dj7uGUtD7R0df5-Wg?feat=directlink"><img src="https://lh5.googleusercontent.com/_8Y30e9LNsno/TddJZOFxMPI/AAAAAAAADLQ/-XIejeG65UU/s400/DSC_1172.jpg" alt="" /></a></p>
+<p style="text-align:center;"><a href="https://picasaweb.google.com/lh/photo/HvDH79OOFYQIk6Jj4NuCUA?feat=directlink"><img src="https://lh3.googleusercontent.com/_8Y30e9LNsno/TddJe8bUCvI/AAAAAAAADLs/FlQOGRRzcBY/s400/DSC_1200.jpg" alt="" /></a></p>
+<p>Nothing else was happening in Kansas at this time, and many chasers ended up converging on these storms. It wasn&#8217;t crowded at all, and people were acting safely.</p>
+<p>Early in the day, we stopped alongside chasers Nathan Truninger and Aaron Barthol to observe our first storm. Our data access was very poor at this point, so we joined up with them so they could help us navigate. We ended up chasing with our new friends the rest of the day. Coordinating our chase over ham radio was a fun challenge, and it was good to have someone along to help make decisions. We had dinner with them in Wichita, and will possibly chase with them again tomorrow.</p>
+<p style="text-align:center;"><a href="https://picasaweb.google.com/lh/photo/Vf3rOE6RTnzv3NgmXlehvg?feat=directlink"><img src="https://lh6.googleusercontent.com/_8Y30e9LNsno/TddJdnj0dfI/AAAAAAAADLk/-8btYKixnr8/s400/DSC_1193.jpg" alt="" /></a></p>
+<p>These storms were not particularly dangerous, and although they were severe-warned, these were marginal warnings at best. There was very weak rotation present, if any, in today&#8217;s cells.</p>
+<p style="text-align:center;"><a href="https://picasaweb.google.com/lh/photo/GVDxxydqVzDvAryKcNvqjw?feat=directlink"><img src="https://lh4.googleusercontent.com/_8Y30e9LNsno/TddJ-KbwOoI/AAAAAAAADMA/hTGGMcrzSr4/s400/DSC_1219.jpg" alt="" /></a></p>
+<p>In all, it was a surprisingly good day. We made all the right calls today, and it paid off. We were on the storms early, from initiation to dissipation. There was a little excitement (stray hail stones, and almost getting stuck on some slick roads), but today was mostly stress-free. It hardly felt like 450 miles of driving. Nathan and Aaron are great guys and were a pleasure to chase with.</p>
+<p style="text-align:center;"><a href="https://picasaweb.google.com/lh/photo/MlZ1Agv7wMOHlTNpr7dnQg?feat=directlink"><img src="https://lh3.googleusercontent.com/_8Y30e9LNsno/TddJaKj3olI/AAAAAAAADLU/a2cLQ_gdSMo/s400/DSC_1173.JPG" alt="" /></a></p>
+
+<div style="margin: 3em 0; border-bottom: 1px solid #CCCCCC"></div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript" src="http://disqus.com/forums/suckzone/embed.js"></script>
+<noscript><a href="http://suckzone.disqus.com/?url=ref">View the discussion thread.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+			
+		</div>
+		<div class="span-6 append-2 last">
+			
+			<!-- <div id="map" style="width: 230px; height: 300px;"></div>
+			<p id="map_time"></p> -->
+			
+			<div id="twitter_div">
+				<a class="twitter-timeline" href="https://twitter.com/suckzone" data-widget-id="592428431297613824">Tweets by @suckzone</a>
+				<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+			</div>
+		</div>
+	</div>
+	
+	
+	<div class="container" id="ft">
+		All content &copy; 2015 <a href="http://rockwellschrock.com/">Rockwell Schrock</a>. 
+		Powered by <a href="http://jekyllrb.com/">Jekyll</a>.
+	</div>
+	
+</div>
+
+<!-- Disqus -->
+<script type="text/javascript">
+//<![CDATA[
+(function() {
+		var links = document.getElementsByTagName('a');
+		var query = '?';
+		for(var i = 0; i < links.length; i++) {
+			if(links[i].href.indexOf('#disqus_thread') >= 0) {
+				query += 'url' + i + '=' + encodeURIComponent(links[i].href) + '&';
+			}
+		}
+		document.write('<script charset="utf-8" type="text/javascript" src="http://disqus.com/forums/suckzone/get_num_replies.js' + query + '"></' + 'script>');
+	})();
+//]]>
+</script>
+
+<!-- Google Analytics -->
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-4760872-7");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</body>
+</html>

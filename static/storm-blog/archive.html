@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>The Suck Zone </title>
+	
+	<link rel="alternate" title="" type="application/atom+xml" href="/storm-blog/atom.xml">
+	
+	<link rel="stylesheet" href="/storm-blog/styles/blueprint/screen.css" type="text/css" media="screen, projection">
+	<link rel="stylesheet" href="/storm-blog/styles/blueprint/print.css" type="text/css" media="print">	
+	<!--[if IE]><link rel="stylesheet" href="/storm-blog/styles/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
+	
+	<link rel="stylesheet" href="/storm-blog/styles/main.css" type="text/css">
+	
+	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.0/jquery.min.js"></script>
+	
+	<script type="text/javascript">
+		var radarOverlay, map, mapDiv, marker;
+		
+		var refreshMarker = function() {
+			mapDiv = document.getElementById("map");
+			if (mapDiv == null) {
+				return;
+			}
+
+			$.get("/storm-blog/spotter_feed.cfm", function(data) {
+				var objects = data.split("End:");
+				var found = false;
+
+				for (var i = 0; i < objects.length; i++) {
+					var object = objects[i];
+					if (object.indexOf("Rockwell Schrock") > -1) {
+						var lines = object.split("\n");
+						var coords = lines[1].split(" ")[1].split(",");
+						var utcTime = lines[2].split("\\n")[1];
+						var date = new Date(Date.parse(utcTime));
+						
+						var now = new Date();
+						var minutesAgo = Math.round((now.getTime() - date.getTime()) / 60000);
+
+						var latlng = new google.maps.LatLng(coords[0], coords[1]);
+
+						if (map == null) {
+							map = new google.maps.Map(mapDiv, {
+								zoom: 8,
+								mapTypeId: google.maps.MapTypeId.ROADMAP
+							});
+
+							marker = new google.maps.Marker({
+								map: map
+							});
+						}
+
+						map.setCenter(latlng);
+						marker.setPosition(latlng);
+						
+						$("#map_date").text(minutesAgo + " " + (minutesAgo == 1 ? "minute" : "minutes") + " ago (" + utcTime + ")");
+						
+						found = true;
+						break;
+					}
+				}
+				
+				if (found) {
+					refreshRadarOverlay();
+					$("#map, #map_info").show();
+				} else {
+					$("#map, #map_info").hide();
+				}
+
+			});
+		};
+
+		var refreshRadarOverlay = function() {
+			var imageBounds = new google.maps.LatLngBounds(
+			    new google.maps.LatLng(21.652538062803, -127.620375523875420),
+			    new google.maps.LatLng(50.406626367301044,-66.517937876818));
+			
+			var oldMap = map;
+
+			if (radarOverlay != null) {
+				oldMap = radarOverlay.getMap();
+				radarOverlay.setMap(null)
+			};
+
+			radarOverlay = new google.maps.GroundOverlay("http://radar.weather.gov/ridge/Conus/RadarImg/latest_radaronly.gif", imageBounds, { opacity: 0.5, map: oldMap });
+		};
+
+
+		setInterval(refreshMarker, 1 * 60 * 1000);
+
+		$(function() {
+			refreshMarker();
+
+			$("#radar_check").click(function() {
+				var check = $("#radar_check");
+				if (check.prop("checked")) {
+					radarOverlay.setMap(map);
+				} else {
+					radarOverlay.setMap(null);
+				}
+			});
+		});
+	
+	</script>
+	
+</head>
+<body>
+
+	<div class="container" id="hd">
+		
+	</div>
+	
+	<div class="container" id="nv">
+		
+		<ul>
+			<li><a href="/storm-blog/">Latest</a></li>
+			<li><a href="/storm-blog/2015.html">2015</a></li>
+			<li><a href="/storm-blog/2011.html">2011</a></li>
+			<li><a href="/storm-blog/2010.html">2010</a></li>
+			<li><a href="/storm-blog/2009.html">2009</a></li>
+			<li><a href="/storm-blog/2007.html">2007</a></li>
+			<li><a href="/storm-blog/2006.html">2006</a></li>			
+			<li><a href="/storm-blog/archive.html">Archive</a></li>
+			<!--<li><a href="/storm-blog/map.html">Live Map</a></li>-->
+			<li><a href="http://twitter.com/suckzone">Twitter</a></li>
+			<li><a href="/storm-blog/atom.xml">RSS</a></li>
+			<li><a href="/storm-blog/about.html">About</a></li>
+		</ul>
+		
+	</div>
+
+	<div class="container" id="notice">
+		<p>
+			<b>LIVE STREAMING</b> &ndash;
+			Download <a href="https://itunes.apple.com/app/id972909677">Periscope</a> and follow <a href="http://twitter.com/suckzone">@suckzone</a> to be notified when streams begin.
+		</p>
+	</div>
+	
+	<div class="container" id="map_info" style="display: none">
+		<div style="padding: 5px 20px; background-color: #333; color: #fff">
+			<div style="float: right">
+				Position updates every minute &ndash; 
+				<input type="checkbox" id="radar_check" checked="checked"><label for="radar_check" style="font-weight: normal">Radar overlay</label>
+			</div>
+			<b>LATEST POSITION</b> &ndash;
+			<span id="map_date"></span>
+		</div>
+	</div>
+
+	<div class="container" id="map" style="display: none">
+	
+	</div>
+	
+	
+	<div class="container" id="bd">
+		<div class="prepend-2 span-13 append-1">
+			
+			<h2>Archive</h2>
+
+<h3>All Chase Summaries</h3>
+
+<ul class="archive">
+	
+		<li>
+			<a href="/storm-blog/summary/2006/06/18/day-1-summary.html">
+				June 18, 2006 &ndash; Day 1 Summary
+			</a>
+			<div class="summary">No severe storms :(</div>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2006/06/19/day-2-summary-hichhikers-guide-to-nebraska.html">
+				June 19, 2006 &ndash; Day 2 Summary - The Hitchhiker's Guide to Nebraska
+			</a>
+			<div class="summary">Observed a small, struggling, high-based storm; ate at Arby's</div>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2006/06/20/day-3-summary-success.html">
+				June 20, 2006 &ndash; Day 3 Summary - Success!
+			</a>
+			<div class="summary">Witnessed two long-lived supercells, one LP and one classic; saw a killer lightning show</div>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2006/06/21/day-4-summary-more-frustration.html">
+				June 21, 2006 &ndash; Day 4 Summary - More Frustration
+			</a>
+			<div class="summary">Intercepted a squall line; watched a nice lightning show after dark</div>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2006/06/22/day-5-summary.html">
+				June 22, 2006 &ndash; Day 5 Summary
+			</a>
+			<div class="summary">Got on several tornado-warned storms; was chased by an HP beast; core-punched a little bit</div>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2006/06/23/day-6-summary-the-grand-finale.html">
+				June 23, 2006 &ndash; Day 6 Summary - The Grand Finale
+			</a>
+			<div class="summary">Had fun with two LP storms; stared down the gullet of another HP beast</div>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2007/05/14/success.html">
+				May 14, 2007 &ndash; Success
+			</a>
+			<div class="summary">Tornado warning in the Upper Peninsula; skirted its hail core</div>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2007/05/15/more-fun-without-the-sun.html">
+				May 15, 2007 &ndash; More fun without the sun
+			</a>
+			<div class="summary">Got personal with some wind and rain in central MI</div>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2009/05/20/route-2-chase.html">
+				May 20, 2009 &ndash; Nebraska Route 2 chase
+			</a>
+			<div class="summary">Perfect day! I chased the best cell of the day and had a great time tracking it down and meeting other chasers.</div>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2009/06/05/wrecked.html">
+				June 05, 2009 &ndash; Wrecked
+			</a>
+			<div class="summary">Crashed the car far from home and close to storms. Adventure ensues.</div>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2009/06/09/ponca-city-bust.html">
+				June 09, 2009 &ndash; Ponca City bust
+			</a>
+			<div class="summary">The moderate risk in SE KS didn't pan out</div>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2009/06/12/norman-tornado.html">
+				June 12, 2009 &ndash; Norman Tornado
+			</a>
+			<div class="summary">The shortest chase. Ever.</div>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2009/06/13/turkey-day.html">
+				June 13, 2009 &ndash; Turkey Day
+			</a>
+			<div class="summary">Another moderate risk bites the big one</div>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2010/06/06/three-little-supercells.html">
+				June 06, 2010 &ndash; Day 1 - The Three Little Supercells
+			</a>
+			<div class="summary">We jumped around on three supercells in WY and NE and got to punch some cores</div>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2010/06/07/tornado.html">
+				June 07, 2010 &ndash; Tornado!
+			</a>
+			<div class="summary">Tornado virginity taken by a rain-wrapped cone approaching at 40 MPH from 1/2 mile away</div>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2010/06/08/surprise.html">
+				June 08, 2010 &ndash; Surprise!
+			</a>
+			<div class="summary">A near-bust ends with a tornado-warned supercell at dusk in eastern CO</div>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2010/06/09/van-no-go.html">
+				June 09, 2010 &ndash; Van no-go
+			</a>
+			<div class="summary">We had once chance and caught the only big cell in the tornado watch</div>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2010/06/10/tornado-duo.html">
+				June 10, 2010 &ndash; Tornado duo
+			</a>
+			<div class="summary">A monster cyclic supercell dropped two beautiful cones and roped out beautifully</div>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2010/06/11/mcs-equals-mess-of-crappy-storms.html">
+				June 11, 2010 &ndash; MCS = Mess of Crappy Storms
+			</a>
+			<div class="summary">Chased one cell south of Denver that became HP and never recovered</div>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2011/05/12/missouri-madness.html">
+				May 12, 2011 &ndash; Missouri madness
+			</a>
+			<div class="summary">Caught a tornado-warned cell in southwestern MO on a marginal day</div>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2011/05/19/mistakes-were-made.html">
+				May 19, 2011 &ndash; Mistakes were made
+			</a>
+			<div class="summary">Poor decision-making and lack of reliable data led to a day of missed opportunity</div>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2011/05/20/cold-front-shenanigans.html">
+				May 20, 2011 &ndash; Cold front shenanigans
+			</a>
+			<div class="summary">Caught some severe thunderstorms in central KS on a "nothing" day</div>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2011/05/22/first-solo-tornado.html">
+				May 22, 2011 &ndash; My first solo tornado!
+			</a>
+			<div class="summary">Caught a brief tornado that caused damage in Waverly, MO</div>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2011/05/23/okeene-tornado.html">
+				May 23, 2011 &ndash; Okeene tornado
+			</a>
+			<div class="summary">Saw the full lifecycle of a supercell that dropped a brief tornado near Okeene, OK, and intercepted some other nice cells</div>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2011/05/24/high-risk-low-yield.html">
+				May 24, 2011 &ndash; High risk, low yield
+			</a>
+			<div class="summary">Missed all the big storms in the tornado outbreak</div>
+		</li>
+	
+</ul>
+
+<h3>Off the Beaten Path</h3>
+
+<ul class="archive">
+	
+	
+		<li>
+			<a href="/storm-blog/off-the-beaten-path/2009/05/22/sandhills-and-cosmosphere.html">
+				May 22, 2009 &ndash; Off the Beaten Path: Nebraska sandhills and Kansas Cosmosphere
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/off-the-beaten-path/2009/05/23/twister-movie-museum.html">
+				May 23, 2009 &ndash; Off the Beaten Path: The Twister Movie Musem
+			</a>
+		</li>
+	
+	
+</ul>
+
+<h3>All Posts</h3>
+
+<ul class="archive">
+	
+	
+		<li>
+			<a href="/storm-blog/2004/11/15/chasing-the-dream.html">
+				November 15, 2004 &ndash; Chasing the Dream
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/2005/02/22/2005-nscc.html">
+				February 22, 2005 &ndash; 2005 NSCC
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/2006/06/16/chasing-next-week.html">
+				June 16, 2006 &ndash; Chasing next week!
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/2006/06/17/2006-trains-planes-and-automobiles.html">
+				June 17, 2006 &ndash; Trains, Planes, and Automobiles
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2006/06/18/day-1-summary.html">
+				June 18, 2006 &ndash; Day 1 Summary
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2006/06/19/day-2-summary-hichhikers-guide-to-nebraska.html">
+				June 19, 2006 &ndash; Day 2 Summary - The Hitchhiker's Guide to Nebraska
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2006/06/20/day-3-summary-success.html">
+				June 20, 2006 &ndash; Day 3 Summary - Success!
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2006/06/21/day-4-summary-more-frustration.html">
+				June 21, 2006 &ndash; Day 4 Summary - More Frustration
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2006/06/22/day-5-summary.html">
+				June 22, 2006 &ndash; Day 5 Summary
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2006/06/23/day-6-summary-the-grand-finale.html">
+				June 23, 2006 &ndash; Day 6 Summary - The Grand Finale
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/2007/01/01/it-starts-again.html">
+				January 01, 2007 &ndash; It Starts Again
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/2007/03/10/video-spring-break-preparations.html">
+				March 10, 2007 &ndash; Video: Spring Break Preparations
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/2007/05/07/video-curse-of-the-windshield.html">
+				May 07, 2007 &ndash; Video: Curse of the Windshield
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/2007/05/09/chaser-positioning-system.html">
+				May 09, 2007 &ndash; Chaser Positioning System
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/2007/05/10/partway-there.html">
+				May 10, 2007 &ndash; Partway there
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/2007/05/11/yeah-we-kinda-ruled-today.html">
+				May 11, 2007 &ndash; "Yeah, we kinda ruled today..."
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/2007/05/12/wait-a-second-minnesota.html">
+				May 12, 2007 &ndash; Wait a second... Minnesota?
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/2007/05/13/day-four-frustration.html">
+				May 13, 2007 &ndash; Day Fo(u)r Frustration
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2007/05/14/success.html">
+				May 14, 2007 &ndash; Success
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2007/05/15/more-fun-without-the-sun.html">
+				May 15, 2007 &ndash; More fun without the sun
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/2007/05/16/homeward-bound.html">
+				May 16, 2007 &ndash; Homeward Bound
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/2009/05/02/launch.html">
+				May 02, 2009 &ndash; You have entered The Suck Zone
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/2009/05/06/start-page.html">
+				May 06, 2009 &ndash; Chaser tools: the start page
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/2009/05/12/business-card.html">
+				May 12, 2009 &ndash; Take my card
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/2009/05/14/storm-chasing-tools.html">
+				May 14, 2009 &ndash; Video: Storm chasing high technology
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/2009/05/15/outbound-plan-a.html">
+				May 15, 2009 &ndash; Outbound Plan A
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/2009/05/18/first-outbound-leg.html">
+				May 18, 2009 &ndash; Outbound leg 1
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/2009/05/19/second-outbound-leg.html">
+				May 19, 2009 &ndash; Outbound leg 2
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2009/05/20/route-2-chase.html">
+				May 20, 2009 &ndash; Nebraska Route 2 chase
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/off-the-beaten-path/2009/05/22/sandhills-and-cosmosphere.html">
+				May 22, 2009 &ndash; Off the Beaten Path: Nebraska sandhills and Kansas Cosmosphere
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/off-the-beaten-path/2009/05/23/twister-movie-museum.html">
+				May 23, 2009 &ndash; Off the Beaten Path: The Twister Movie Musem
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/2009/05/31/start-of-internship.html">
+				May 31, 2009 &ndash; Beginning the internship
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2009/06/05/wrecked.html">
+				June 05, 2009 &ndash; Wrecked
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2009/06/09/ponca-city-bust.html">
+				June 09, 2009 &ndash; Ponca City bust
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2009/06/12/norman-tornado.html">
+				June 12, 2009 &ndash; Norman Tornado
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2009/06/13/turkey-day.html">
+				June 13, 2009 &ndash; Turkey Day
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/2009/08/13/home-again.html">
+				August 13, 2009 &ndash; Home again
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/2010/04/26/silver-lining.html">
+				April 26, 2010 &ndash; Looking for that Silver Lining
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/2010/06/05/arrival.html">
+				June 05, 2010 &ndash; Tour 5 arrives in Denver
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2010/06/06/three-little-supercells.html">
+				June 06, 2010 &ndash; Day 1 - The Three Little Supercells
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2010/06/07/tornado.html">
+				June 07, 2010 &ndash; Tornado!
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2010/06/08/surprise.html">
+				June 08, 2010 &ndash; Surprise!
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2010/06/09/van-no-go.html">
+				June 09, 2010 &ndash; Van no-go
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2010/06/10/tornado-duo.html">
+				June 10, 2010 &ndash; Tornado duo
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2010/06/11/mcs-equals-mess-of-crappy-storms.html">
+				June 11, 2010 &ndash; MCS = Mess of Crappy Storms
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/2010/06/12/conclusion.html">
+				June 12, 2010 &ndash; Tour 5 conclusion
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/2011/05/07/chasecation.html">
+				May 07, 2011 &ndash; Time for another chasecation
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/2011/05/11/oh-zanesville-oh.html">
+				May 11, 2011 &ndash; Oh, Zanesville, OH
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2011/05/12/missouri-madness.html">
+				May 12, 2011 &ndash; Missouri madness
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/2011/05/17/colorado-or-bust.html">
+				May 17, 2011 &ndash; Colorado or bust
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2011/05/19/mistakes-were-made.html">
+				May 19, 2011 &ndash; Mistakes were made
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2011/05/20/cold-front-shenanigans.html">
+				May 20, 2011 &ndash; Cold front shenanigans
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2011/05/22/first-solo-tornado.html">
+				May 22, 2011 &ndash; My first solo tornado!
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2011/05/23/okeene-tornado.html">
+				May 23, 2011 &ndash; Okeene tornado
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/summary/2011/05/24/high-risk-low-yield.html">
+				May 24, 2011 &ndash; High risk, low yield
+			</a>
+		</li>
+	
+		<li>
+			<a href="/storm-blog/2015/04/26/here-it-goes-again.html">
+				April 26, 2015 &ndash; Here it goes again
+			</a>
+		</li>
+	
+	
+</ul>
+			
+		</div>
+		<div class="span-6 append-2 last">
+			
+			<!-- <div id="map" style="width: 230px; height: 300px;"></div>
+			<p id="map_time"></p> -->
+			
+			<div id="twitter_div">
+				<a class="twitter-timeline" href="https://twitter.com/suckzone" data-widget-id="592428431297613824">Tweets by @suckzone</a>
+				<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+			</div>
+		</div>
+	</div>
+	
+	
+	<div class="container" id="ft">
+		All content &copy; 2015 <a href="http://rockwellschrock.com/">Rockwell Schrock</a>. 
+		Powered by <a href="http://jekyllrb.com/">Jekyll</a>.
+	</div>
+	
+</div>
+
+<!-- Disqus -->
+<script type="text/javascript">
+//<![CDATA[
+(function() {
+		var links = document.getElementsByTagName('a');
+		var query = '?';
+		for(var i = 0; i < links.length; i++) {
+			if(links[i].href.indexOf('#disqus_thread') >= 0) {
+				query += 'url' + i + '=' + encodeURIComponent(links[i].href) + '&';
+			}
+		}
+		document.write('<script charset="utf-8" type="text/javascript" src="http://disqus.com/forums/suckzone/get_num_replies.js' + query + '"></' + 'script>');
+	})();
+//]]>
+</script>
+
+<!-- Google Analytics -->
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-4760872-7");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</body>
+</html>
