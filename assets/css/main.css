@@ -1,5 +1,4 @@
-@import "./fonts.css";
-@import "./cv-prose.css";
+/* WARNING! DO NOT @import HERE! ADD TO nuxt.config.js INSTEAD! */
 
 @tailwind base;
 
