@@ -78,7 +78,7 @@
     <div class="px-4 my-8 md:my-12 text-lg md:text-3xl text-center">{{ hintText }}</div>
 
     <div class="border-t border-gray-400 my-8 py-8 mx-4 md:mx-0">
-      <p class="block md:hidden mb-4">
+      <p class="block md:hidden mb-4 text-gray-600">
         <strong>NEW!</strong> Type your own search terms into the diagram.
       </p>
 
@@ -89,7 +89,7 @@
           >{{ showInfo ? '–' : '+'}}</div>More Info
         </button>
 
-        <p class="hidden md:block">
+        <p class="hidden md:block text-gray-600">
           <strong>NEW!</strong> Type your own search terms into the diagram.
         </p>
       </div>
