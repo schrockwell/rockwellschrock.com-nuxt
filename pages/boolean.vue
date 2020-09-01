@@ -59,6 +59,7 @@
         >
           <div style="width: 40%" class="px-4 md:px-8">
             <input
+              type="text"
               class="w-full transition-border duration-300 text-center bg-transparent outline-none placeholder-gray-800 border-b-2 border-black border-opacity-0 hover:border-opacity-25 focus:border-opacity-25 border-op"
               placeholder="Endangered"
               v-model="query1"
@@ -67,6 +68,7 @@
           <div>{{ operatorText }}</div>
           <div style="width: 40%" class="px-4 md:px-8">
             <input
+              type="text"
               class="w-full transition-border duration-300 text-center bg-transparent outline-none placeholder-gray-800 border-b-2 border-black border-opacity-0 hover:border-opacity-25 focus:border-opacity-25 border-op"
               placeholder="Birds"
               v-model="query2"
