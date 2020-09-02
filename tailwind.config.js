@@ -42,6 +42,10 @@ module.exports = {
 
       letterSpacing: {
         tightest: "-0.1em"
+      },
+
+      backgroundOpacity: {
+        10: "0.1"
       }
     }
   }

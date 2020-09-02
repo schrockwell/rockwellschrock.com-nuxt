@@ -1,5 +1,22 @@
 <template>
-  <div class="container mx-auto my-4 md:my-8">
+  <div class="container mx-auto">
+    <div class="my-4 md:mb-8">
+      <h1 class="text-center text-xl md:text-3xl">
+        The Boolean Machine
+        <span
+          class="align-text-top text-xs md:text-base font-semibold text-gray-500 -ml-1"
+        >3</span>
+      </h1>
+      <h2 class="text-center text-sm md:text-base font-medium text-gray-500">
+        Since 2000 –
+        by
+        <a
+          href="https://rockwellschrock.com/"
+          class="underline hover:text-gray-700"
+        >Rockwell Schrock</a>
+      </h2>
+    </div>
+
     <div class="relative md:flex">
       <div
         class="flex md:flex-col px-4 md:px-0 lg:pr-32 md:pr-16 space-x-2 md:space-x-0 text-xl lg:text-3xl"
@@ -20,7 +37,11 @@
         >NOT</button>
       </div>
 
-      <div class="flex-grow relative mx-4 md:mx-0">
+      <div
+        class="flex-grow relative mx-4 md:mx-0"
+        @mouseleave="highlightInputs = false"
+        @mouseenter="highlightInputs = true"
+      >
         <!-- White-filled BG circles establish the height of this flex block, for positioning -->
         <div class="flex">
           <div class="relative" style="width: 60%; padding-bottom: 60%">
@@ -60,7 +81,7 @@
           <div style="width: 40%" class="px-4 md:px-8">
             <input
               type="text"
-              class="w-full transition-border duration-300 text-center bg-transparent outline-none placeholder-gray-800 border-b-2 border-black border-opacity-0 hover:border-opacity-25 focus:border-opacity-25 border-op"
+              :class="[inputOpacityClass, 'w-full bg-black transition-border duration-300 text-center bg-transparent outline-none placeholder-gray-800 border-b-2 border-black border-opacity-0 hover:border-opacity-25 focus:border-opacity-25']"
               placeholder="Endangered"
               v-model="query1"
             />
@@ -69,7 +90,7 @@
           <div style="width: 40%" class="px-4 md:px-8">
             <input
               type="text"
-              class="w-full transition-border duration-300 text-center bg-transparent outline-none placeholder-gray-800 border-b-2 border-black border-opacity-0 hover:border-opacity-25 focus:border-opacity-25 border-op"
+              :class="[inputOpacityClass, 'w-full bg-black transition-border duration-300 text-center bg-transparent outline-none placeholder-gray-800 border-b-2 border-black border-opacity-0 hover:border-opacity-25 focus:border-opacity-25']"
               placeholder="Birds"
               v-model="query2"
             />
@@ -97,9 +118,8 @@
       </div>
 
       <div v-show="showInfo" class="my-4">
-        <h2 class="text-2xl font-semibold">The Boolean Machine</h2>
-        <h3 class="mb-4">
-          by
+        <p class="mb-4">
+          By
           <a
             href="https://rockwellschrock.com"
             class="underline hover:text-gray-600"
@@ -108,7 +128,7 @@
             href="mailto:schrockwell@gmail.com"
             class="underline hover:text-gray-600"
           >schrockwell@gmail.com</a>
-        </h3>
+        </p>
         <p
           class="my-4"
         >You are free to use this page in your presentations, course materials, or anything else.</p>
@@ -180,6 +200,7 @@ export default {
       query1: this.$route.query.query1 || "",
       query2: this.$route.query.query2 || "",
       customUrl: "",
+      highlightInputs: false,
     };
   },
 
@@ -207,6 +228,10 @@ export default {
   },
 
   computed: {
+    inputOpacityClass() {
+      return this.highlightInputs ? "bg-opacity-10" : "bg-opacity-0";
+    },
+
     hintText() {
       return HINT_TEXT[this.operator];
     },
