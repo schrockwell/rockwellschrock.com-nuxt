@@ -102,7 +102,7 @@
 
     <div class="border-t border-gray-400 my-8 py-8 mx-4 md:mx-0">
       <p class="block md:hidden mb-4 text-gray-600">
-        <strong>NEW!</strong> Type your own search terms into the diagram.
+        <span class="font-semibold bg-teal-500 text-white px-2 py-1 mr-2 text-sm rounded-full">NEW!</span>Type your own search terms into the diagram.
       </p>
 
       <div class="flex justify-between">
@@ -113,7 +113,9 @@
         </button>
 
         <p class="hidden md:block text-gray-600">
-          <strong>NEW!</strong> Type your own search terms into the diagram.
+          <span
+            class="font-semibold bg-teal-500 text-white px-2 py-1 mr-2 text-sm rounded-full"
+          >NEW!</span>Type your own search terms into the diagram.
         </p>
       </div>
 
