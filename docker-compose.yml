@@ -3,8 +3,6 @@ services:
     app:
         build: .
         ports:
-            - "5000:5000"
+            - '5000:5000'
         volumes:
-            - type: bind
-              source: .
-              target: /app
+            - .:/app
