@@ -29,10 +29,6 @@ sections:
       - title: SOTA Goat for iOS
         subtitle: Utility for portable radio operators
         href: https://www.ww1x.com/sotagoat/
-        
-      - title: WaveGuide for iOS
-        subtitle: Radio propagation utility
-        href: https://www.ww1x.com/waveguide/
 
   - title: Recent Projects
     projects: 
