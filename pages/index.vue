@@ -2,7 +2,11 @@
   <div>
     <Hero>{{ content.tagline }}</Hero>
 
-    <IndexSection v-for="section in content.sections" :key="section.title" :title="section.title">
+    <IndexSection
+      v-for="section in content.sections"
+      :key="section.title"
+      :title="section.title"
+    >
       <div class="space-y-4 md:space-y-8">
         <IndexProject
           v-for="project in section.projects"
@@ -10,7 +14,8 @@
           :title="project.title"
           :href="project.href"
           :to="project.to"
-        >{{ project.subtitle }}</IndexProject>
+          >{{ project.subtitle }}</IndexProject
+        >
       </div>
     </IndexSection>
 
@@ -22,6 +27,10 @@
         :href="social.href"
       />
     </IndexSection>
+
+    <a rel="me" href="https://schrock.social/@rockwell" style="display: none">
+      Mastodon
+    </a>
   </div>
 </template>
 
