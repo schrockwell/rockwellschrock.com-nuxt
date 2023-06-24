@@ -28,7 +28,11 @@
       />
     </IndexSection>
 
-    <a rel="me" href="https://schrock.social/@rockwell" style="display: none">
+    <a
+      rel="me"
+      href="https://mastodon.social/@schrockwell"
+      style="display: none"
+    >
       Mastodon
     </a>
   </div>
